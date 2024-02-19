@@ -1,0 +1,208 @@
+<MeasRecordScreen>
+    name: "obj_record"
+    md_bg_color: self.theme_cls.primaryContainerColor
+    text_date: ""
+    text_time1: ""
+    text_time2: ""
+    text_name: ""
+    text_description: ""
+    text_temp: ""
+    text_presure: ""
+    text_hum: ""
+
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            type: "small" 
+            theme_bg_color:"Custom"
+            md_bg_color: 0.2, .3, .3, 1
+
+            MDTopAppBarTitle:
+                text: "Измерения"
+                text_color: "white"
+                pos_hint: {"center_x": .5}
+                font_style: "Headline"
+                role: "small"
+
+            MDTopAppBarTrailingButtonContainer:    
+                MDActionTopAppBarButton:
+                    icon: "arrow-left"
+                    theme_icon_color: "Custom"
+                    icon_color: "white"
+                    on_release: app.go_to_obj()
+                    
+        ScrollView:
+            MDGridLayout:
+                id: custom_widget_box
+                size_hint_y: None
+                cols:1
+                height: self.minimum_height
+                padding:[dp(15),dp(15),dp(15),dp(35)]
+                spacing:dp(25)
+
+                
+                MeasCard:
+                          
+#-------------------------------------------------------------------------------------------------            
+        MDTopAppBar:
+            id: appbar_custom
+            type: "small"  
+            padding:[dp(15),dp(15),dp(15),dp(35)]
+            #spacing:dp(25)
+                
+            MDTopAppBarLeadingButtonContainer:
+
+                MDActionTopAppBarButton:
+                    icon: "menu"
+                    theme_icon_color: "Custom"
+                    icon_color: "green"
+                    on_release: app.open_left_menu(self, 0)
+
+            MDTopAppBarTitle:
+                pos_hint: {"center_x": .5, "center_y": .5}
+                text: " "
+                theme_text_color: "Custom"
+                text_color: "green"
+
+            
+                
+<Spacer@Widget>
+    size_hint_y: None
+    height: "12dp"
+
+<MeasCard>:
+    size_hint_y: None
+    height: "600dp"
+
+    MDCard:
+        theme_bg_color:"Custom"
+        md_bg_color: self.theme_cls.primaryContainerColor
+        md_bg_color_disabled: self.theme_cls.primaryContainerColor
+        ripple_behavior: False
+        Widget:
+            size_hint_x: .05
+            
+        MDBoxLayout:
+            size_hint_x: .8
+            orientation: "vertical"
+            spacing: "15dp"
+            padding: "12dp"
+            #theme_bg_color:"Custom"
+            #md_bg_color: self.theme_cls.primaryContainerColor
+            MDBoxLayout:
+                orientation: "horizontal"
+                spacing: "22dp" 
+
+                CustomButton:
+                    icon: "minus"
+                    text: "Предыдущее"   
+                CustomButton:
+                    icon: "plus"
+                    text: "Следующее"      
+            Spacer:    
+
+            MDBoxLayout:
+                orientation: "horizontal"
+                spacing: "22dp" 
+
+                CustomButton:
+                    icon: "content-save"
+                    text: "Сохранить"
+                    on_release: app.save_meas() 
+                CustomButton:
+                    icon: "trash-can"
+                    text: "Удалить"
+                CustomButton:
+                    icon: "file-plus-outline"
+                    text: "Новое"  
+
+            Spacer:
+
+            MDBoxLayout:
+                orientation: "horizontal"
+                spacing: "22dp" 
+
+                MDLabel:
+                    size_hint_x: .3
+                    text: "Измерение "
+                    font_style: "Display"
+                    role: "small"
+                
+                MDTextField:
+                    size_hint_x: .2
+                    id: n_record
+                    mode: "outlined"
+                    text: "0"
+                    #on_text: root.on_temp_change(self.text)
+                
+                MDLabel:
+                    size_hint_x: .15
+                    text: " из "
+                    font_style: "Display"
+                    role: "small"
+                
+                MDLabel:
+                    size_hint_x: .25
+                    text: "0"
+                    font_style: "Display"
+                    role: "small"
+
+            MDTextField:
+                id: p1
+                mode: "outlined"
+                text: ""
+                #on_text: root.on_presure_change(self.text)
+                MDTextFieldHintText:
+                    text: "Рабочее давление, кПа"
+            
+            MDTextField:
+                id: p2
+                mode: "outlined"
+                text: ""
+                #on_text: root.on_presure_change(self.text)
+                MDTextFieldHintText:
+                    text: "Рабочее давление, кПа"
+
+            MDTextField:
+                id: p3
+                mode: "outlined"
+                text: ""
+                #on_text: root.on_presure_change(self.text)
+                MDTextFieldHintText:
+                    text: "Рабочее давление, кПа"
+
+            MDTextField:
+                id: p4
+                mode: "outlined"
+                text: ""
+                #on_text: root.on_presure_change(self.text)
+                MDTextFieldHintText:
+                    text: "Рабочее давление, кПа"
+
+            MDTextField:
+                id: p5
+                mode: "outlined"
+                text: ""
+                #on_text: root.on_presure_change(self.text)
+                MDTextFieldHintText:
+                    text: "Рабочее давление, кПа"
+                
+        MDBoxLayout:   
+            size_hint_x: .05    
+                
+
+<CustomButton@MDButton>
+    icon: "android"
+    text: "Button"
+    style: "filled"
+    theme_width: "Custom"
+    height: "56dp"
+    size_hint_x: .5
+    MDButtonIcon:
+        x: text.x - (self.width + dp(10))
+        icon: root.icon
+
+    MDButtonText:
+        id: text
+        text: root.text
+        pos_hint: {"center_x": .5, "center_y": .5}

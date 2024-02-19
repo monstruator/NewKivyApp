@@ -117,8 +117,18 @@
                     text: root.text_hum
                     on_text: root.on_hum_change(self.text)
                     MDTextFieldHintText:
-                        text: "Относительная влажность, %"     
+                        text: "Относительная влажность, %"
+            
+                Spacer:
 
+                MDLabel:
+                    id: total_meas
+                    size_hint_x: .3
+                    text: "Всего измерений: 0"
+                    font_style: "Display"
+                    role: "small"     
+                
+                MDBoxLayout:
                           
 #-------------------------------------------------------------------------------------------------            
         MDTopAppBar:
@@ -147,117 +157,7 @@
                 color_map: "tertiary" 
                 theme_bg_color: "Custom"
                 md_bg_color: "blue" 
-                on_release: root.save_record()  
-                
-<Spacer@Widget>
-    size_hint_y: None
-    height: "12dp"
-
-<MeasCard@RelativeLayout>:
-    size_hint_y: None
-    height: "600dp"
-    
-    MDCard:
-        theme_bg_color:"Custom"
-        md_bg_color: 0.4, .4, .4, .1
-        Widget:
-            size_hint_x: .05
-            
-        MDBoxLayout:
-            size_hint_x: .8
-            orientation: "vertical"
-            spacing: "15dp"
-            padding: "12dp"
-
-            MDBoxLayout:
-                orientation: "horizontal"
-                spacing: "22dp" 
-
-                CustomButton:
-                    icon: "minus"
-                    text: "Предыдущее"   
-                CustomButton:
-                    icon: "plus"
-                    text: "Следующее"      
-            Spacer:    
-
-            MDBoxLayout:
-                orientation: "horizontal"
-                spacing: "22dp" 
-
-                CustomButton:
-                    icon: "content-save"
-                    text: "Сохранить"
-                CustomButton:
-                    icon: "content-save"
-                    text: "Удалить"
-                CustomButton:
-                    icon: "file-plus-outline"
-                    text: "Новое"  
-
-            Spacer:
-
-            MDLabel:
-                text: "Измерение 0/0"
-                font_style: "Display"
-                role: "small"
-
-            MDTextField:
-                id: p1
-                mode: "outlined"
-                text: "root.p1"
-                #on_text: root.on_presure_change(self.text)
-                MDTextFieldHintText:
-                    text: "Рабочее давление, кПа"
-            
-            MDTextField:
-                id: p2
-                mode: "outlined"
-                text: "root.p1"
-                #on_text: root.on_presure_change(self.text)
-                MDTextFieldHintText:
-                    text: "Рабочее давление, кПа"
-
-            MDTextField:
-                id: p3
-                mode: "outlined"
-                text: "root.p1"
-                #on_text: root.on_presure_change(self.text)
-                MDTextFieldHintText:
-                    text: "Рабочее давление, кПа"
-
-            MDTextField:
-                id: p4
-                mode: "outlined"
-                text: "root.p1"
-                #on_text: root.on_presure_change(self.text)
-                MDTextFieldHintText:
-                    text: "Рабочее давление, кПа"
-
-            MDTextField:
-                id: p5
-                mode: "outlined"
-                text: "root.p1"
-                on_text: root.on_presure_change(self.text)
-                MDTextFieldHintText:
-                    text: "Рабочее давление, кПа"
-                
-        MDBoxLayout:   
-            size_hint_x: .05    
+                on_release: root.save_meas()  
                 
 
-<CustomButton@MDButton>
-    icon: "android"
-    text: "Button"
-    style: "filled"
-    theme_width: "Custom"
-    height: "56dp"
-    size_hint_x: .5
-    MDButtonIcon:
-        x: text.x - (self.width + dp(10))
-        icon: root.icon
 
-    MDButtonText:
-        id: text
-        text: root.text
-        pos_hint: {"center_x": .5, "center_y": .5}

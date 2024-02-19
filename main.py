@@ -89,6 +89,7 @@ class ManagerScreens(MDScreenManager):
                 NewRecordScreen(name='new_record'),
                 ObjRecordScreen(name='obj_record'),
                 FolderRecordScreen(name='folder_record'),
+                MeasRecordScreen(name='meas_record'),
             ]
         for screen in screens:
             self.add_widget(screen)
@@ -96,6 +97,20 @@ class ManagerScreens(MDScreenManager):
         
 class MyCard(MDCard):
     text = StringProperty()
+
+
+class MeasRecordScreen(MDScreen):
+    dialog = None
+    warning =None
+    date = ""
+    time = ""
+    current_record = None
+    id = None
+
+    def on_enter(self):
+        name =  App.get_running_app().current_record
+        current_record = search_record(name)
+        print("Edit meas for item:",current_record)        
 
 #-------------------------------------------------- ObjRecordScreen ------------------------------------------------
 class ObjRecordScreen(MDScreen):
@@ -110,8 +125,8 @@ class ObjRecordScreen(MDScreen):
         name =  App.get_running_app().current_record
         print("Edit item:", )
         current_record = search_record(name)
-        card = MeasCard()
-        self.ids.custom_widget_box.add_widget(card)
+        # self.card = MeasCard()
+        # self.ids.custom_widget_box.add_widget(self.card)
         self.id = current_record[0]
         self.text_date =  current_record[8]
         self.text_time1 =  current_record[9]
@@ -126,6 +141,11 @@ class ObjRecordScreen(MDScreen):
         self.ids.temp_field.text = str(current_record[5])
         self.hum = current_record[6]
         self.ids.hum_field.text = str(current_record[6])
+        measures = fetch_records_by_record_id(self.id)
+        if measures:
+            self.ids.total_meas.text = "Всего измерений: " + str(len(measures))
+        else:
+            self.ids.total_meas.text = "Всего измерений: 0"
 
     def open_date_picker(self, focus):
         if not focus:
@@ -222,7 +242,6 @@ class ObjRecordScreen(MDScreen):
         self.hum = text
 
     def save_record(self):
-        # create_table() 
         text_err = ""
         if not self.text_time2:
             text_err = "Введите время окончания измерения"  
@@ -450,7 +469,6 @@ class NewRecordScreen(MDScreen):
         self.hum = text
 
     def save_record(self):
-        # create_table() 
         text_err = ""
         if not self.entered_time2:
             text_err = "Введите время окончания измерения"  
@@ -492,62 +510,6 @@ class NewRecordScreen(MDScreen):
         print(load_data()) 
         screen_manager = self.manager
         screen_manager.current = 'record'
-#-------------------------------------------------- FolderRecordScreen ------------------------------------------------
-class FolderRecordScreen(MDScreen):
-    def on_enter(self):
-        self.ids.custom_widget_box.clear_widgets()
-        records = load_data()
-        num_cards = 0
-        if records:
-            for card in records:
-                if card[7] == 0: #is_active
-                    date_txt = "Дата: " +  card[8] + "   Время: с " + card[9][:-3] + " по " + card[10][:-3]
-                    self.add_card(card[1], date_txt, str(card[3]) + " измерений", get_color_from_hex("#70F490"))
-            num_cards = len(self.ids.custom_widget_box.children)
-        print("Number of cards:", num_cards)
-                   
-    def add_card(self, text1, text2, text3, color):
-        print( text1, text2, text3)
-        grid_layout = self.ids.custom_widget_box  # Accessing the MDGridLayout
-        list_item = MDListItem()
-        list_item.text1 = text1
-        icon_btn = MDIconButton(icon="file-plus-outline",
-                                pos_hint={'center_y': .5},
-                                on_release=lambda x: self.icon_add_click(list_item))
-        # MDListItemLeadingIcon(icon="information-outline", on_release=lambda x: self.icon_click(list_item))    
-        headlineText = MDListItemHeadlineText(text=text1,)
-        supportingText  = MDListItemSupportingText(text=text2,)
-        TertiaryText = MDListItemTertiaryText(text=text3,)
-        icon_btn1 = MDIconButton(icon="trash-can-outline",
-                                pos_hint={'center_y': .5},
-                                on_release=lambda x: self.icon_del_click(list_item))
-        container = MDBoxLayout(size_hint_x = 0.1) #md_bg_color = get_color_from_hex("#70F490"),
-        list_item.add_widget(icon_btn)
-        list_item.add_widget(headlineText)
-        list_item.add_widget(supportingText)
-        list_item.add_widget(TertiaryText)
-        list_item.add_widget(container)
-        list_item.add_widget(icon_btn1)
-        grid_layout.add_widget(list_item)
-
-    def icon_del_click(self, list_item):
-        if list_item:
-            text1 = list_item.text1
-            print("Deleted item:", text1)
-            res = update_is_active(text1,0)
-            if res:
-                grid_layout = self.ids.custom_widget_box 
-                grid_layout.remove_widget(list_item) 
-    
-    def icon_add_click(self, list_item):
-        if list_item:
-            text1 = list_item.text1
-            print("Deleted item:", text1)
-            res = update_is_active(text1, 1)
-            if res:
-                grid_layout = self.ids.custom_widget_box 
-                grid_layout.remove_widget(list_item) 
-                   
 #-------------------------------------------------- RecordScreen ------------------------------------------------
 class RecordScreen(MDScreen):
     def on_enter(self):
@@ -559,7 +521,12 @@ class RecordScreen(MDScreen):
                 print(0,card[0], type(card[0]))
                 if card[7] == 1: #is_active
                     date_txt = "Дата: " +  card[8] + "   Время: с " + card[9][:-3] + " по " + card[10][:-3]
-                    self.add_card(card[1], date_txt, str(card[3]) + " измерений", get_color_from_hex("#70F490"))
+                    measures = fetch_records_by_record_id(card[0])
+                    if measures:
+                        count = len(measures)
+                    else:
+                        count = 0
+                    self.add_card(card[1], date_txt, str(count) + " измерений", get_color_from_hex("#70F490"))
             num_cards = len(self.ids.custom_widget_box.children)
         print("Number of cards:", num_cards)
             
@@ -601,7 +568,7 @@ class RecordScreen(MDScreen):
         if list_item:
             
             App.get_running_app().current_record = list_item.text1
-            App.get_running_app().go_to_obj(list_item.text1)
+            App.get_running_app().go_to_obj()
             
             # app.go_to_folder_recods()
             # res = update_is_active(text1,0)
@@ -616,7 +583,7 @@ class LoginScreen(MDScreen):
         self.label1 = "Какой-то текст"
 
 left_menu = [
-    "Объект измерений", "Рабочее сечение точки", "Ввод первичных данных",
+    "Объект измерений", "Измерения","Рабочее сечение точки", "Ввод первичных данных",
     "Расчет плотности газа","Расчет влажности газа","Просмотр результатов",
     "Изокинетический отбор"
 ]
@@ -633,14 +600,17 @@ class Live(App, MDApp):
         os.path.join(os.getcwd(), "new_record_screen.kv"),
         os.path.join(os.getcwd(), "folder_record_screen.kv"),
         os.path.join(os.getcwd(), "obj_record_screen.kv"),
+        os.path.join(os.getcwd(), "meas_record_screen.kv"),
         # os.path.join(os.getcwd(), "manager_screens.kv"),
     }
+
     CLASSES = {
         "ManagerScreens":"manager_screens",
         "LoginScreen":"login_screen",
         "RecordScreen":"record_screen",
         "NewRecordScreen":"new_record_screen",
-        "ObjRecordScreen":"obj_record_screen"
+        "ObjRecordScreen":"obj_record_screen",
+        "MeasRecordScreen":"meas_record_screen",
 
     }
     AUTORELOADER_PATHS = [(os.getcwd(), {"recursive": False})]
@@ -664,7 +634,7 @@ class Live(App, MDApp):
         menu_items = [
             {
                 "text": f"{i}",
-                "on_release": lambda x=f"Item {i}": self.menu_callback(x),
+                "on_release": lambda x=f"{i}": self.menu_l_callback(x),
             } for i in filtered_menu
         ]
         MDDropdownMenu(caller=item, items=menu_items).open()
@@ -673,16 +643,32 @@ class Live(App, MDApp):
         menu_items = [
             {
                 "text": f"{i}",
-                "on_release": lambda x=f"Item {i}": self.menu_callback(x),
+                "on_release": lambda x=f"{i}": self.menu_r_callback(x),
             } for i in right_menu
         ]
         MDDropdownMenu(caller=item, items=menu_items).open()
     
-    def menu_callback(self, text_item):
+    def menu_r_callback(self, text_item):
         # self.root.ids.drop_text.text = text_item
         print(text_item)
+    
+    def menu_l_callback(self, text_item):
+        print(text_item)
+        if text_item == left_menu[1]:
+            print("go_to_meas")
+            self.go_to_meas()
 
-        
+    def save_meas(self):
+        record = search_record(self.current_record)
+        # measurement_details = (1,2,3,4,5)
+        # add_measurement(record[0], measurement_details)
+        print(record[0], self.current_record)
+        measures = fetch_records_by_record_id(record[0])
+        if measures:
+            print(len(measures))
+        else:
+            print("Измерения для записи не найдены")
+
     def go_to_folder_recods(self):
         self.manager_screens.current = 'folder_record'
         screen2 = self.manager_screens.get_screen('folder_record')
@@ -703,9 +689,11 @@ class Live(App, MDApp):
         screen2 = self.manager_screens.get_screen('login')
         print(screen2)
 
-    def go_to_obj(self, text):
+    def go_to_obj(self):
         self.manager_screens.current = 'obj_record'
-        screen2 = self.manager_screens.get_screen('obj_record')
-        print(screen2, text)
+
+    def go_to_meas(self,):
+        self.manager_screens.current = 'meas_record'
+
 
 Live().run()

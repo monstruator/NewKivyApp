@@ -25,6 +25,22 @@ def create_table():
         #file_name TEXT UNIQUE,
         cursor.execute(create_table_query)
         connection.commit()
+
+        create_table_query = '''
+            CREATE TABLE IF NOT EXISTS MeasurTable (
+                id INTEGER PRIMARY KEY,
+                record_id INTEGER,
+                p1 REAL,
+                p2 REAL,
+                p3 REAL,
+                p4 REAL,
+                p5 REAL,
+                FOREIGN KEY(record_id) REFERENCES records(id)
+            )
+        '''
+        cursor.execute(create_table_query)
+        connection.commit()
+
         connection.close()
         print('Table created')
     except:
@@ -42,6 +58,30 @@ def insert_record(name, descr, count, presure, temp, hum, date, time_start, time
         print("Record inserted successfully!")
     except sqlite3.Error as e:
         print(f"Error inserting record: {e}")
+
+def add_measurement(record_id, measurement_details):
+    connection = None
+    try:
+        # Connect to the database
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+
+        # Insert into 'MeasurTable' using the provided 'record_id' and details
+        cursor.execute("""
+            INSERT INTO MeasurTable (record_id, p1, p2, p3, p4, p5)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (record_id,) + tuple(measurement_details))
+
+        # Commit the transaction
+        connection.commit()
+        print("Measurement added successfully to existing record.")
+
+    except sqlite3.Error as e:
+        print(f"Error adding measurement to existing record: {e}")
+    finally:
+        # Ensure the connection is closed
+        if connection:
+            connection.close()
 
 def load_data():
     try:
@@ -122,6 +162,21 @@ def update_record(id, name, descr, count, presure, temp, hum, date, time_start, 
         print(f"Error updating record: {e}")
     finally:
         connection.close()
+
+def fetch_records_by_record_id(record_id):
+    conn = sqlite3.connect('data.db')
+    cur = conn.cursor()
+
+    try:
+        cur.execute("SELECT * FROM MeasurTable WHERE record_id = ?", (record_id,))
+        records = cur.fetchall()
+        return records
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")
+        return []
+    finally:
+        conn.close()
+
 
 # def insert_data(name, count, filename):
 #     try:
