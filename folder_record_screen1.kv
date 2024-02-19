@@ -1,0 +1,101 @@
+<FolderRecordScreen>
+    name: "folder_record"
+    md_bg_color: self.theme_cls.primaryContainerColor
+    text_date: ""
+    text_time: ""
+    text_name: ""
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            type: "small" 
+            theme_bg_color:"Custom"
+            md_bg_color: 0.2, .3, .3, 1
+            
+            MDTopAppBarLeadingButtonContainer:    
+                MDActionTopAppBarButton:
+                    icon: "menu"
+                    theme_icon_color: "Custom"
+                    icon_color: "white"
+                    on_release: app.open_left_menu(self)
+
+            MDTopAppBarTitle:
+                text: "Создание нового измерения"
+                text_color: "white"
+                pos_hint: {"center_x": .5}
+                font_style: "Headline"
+                role: "medium"
+
+            MDTopAppBarTrailingButtonContainer:    
+                MDActionTopAppBarButton:
+                    icon: "arrow-left"
+                    theme_icon_color: "Custom"
+                    icon_color: "white"
+                    on_release: app.go_to_recods()
+                    
+        
+        MDBoxLayout:
+            orientation: "vertical"
+            theme_bg_color: 'Custom'
+            md_bg_color: 209/205,55/105,86/195,1
+            adaptive_height: True
+            #size_hint_x: .5
+            padding: "34dp"
+            spacing: "34dp"
+
+            MDTextField:
+                id: name_field
+                mode: "outlined"
+                text: root.text_name
+                on_text: root.on_text_change(self.text)
+                MDTextFieldHintText:
+                    text: "Введите название"
+                MDTextFieldMaxLengthText:
+                    max_text_length: 30
+
+            MDTextField:
+                id: date_field
+                mode: "outlined"
+                text: root.text_date
+                on_focus: root.open_date_picker(self.focus)
+
+                MDTextFieldHintText:
+                    text: "Введите дату"
+        
+                MDTextFieldHelperText:
+                    text: "MM.DD.YYYY"
+                    mode: "persistent"
+                    
+            
+            MDTextField:
+                id: time_field
+                mode: "outlined"
+                text: root.text_time
+                on_focus: root.open_time_picker(self.focus)
+        
+                MDTextFieldHintText:
+                    text: "Введите время"
+        
+                MDTextFieldHelperText:
+                    text: "HH.MM"
+                    mode: "persistent"
+        
+        MDBoxLayout:
+            theme_bg_color: 'Custom'
+            md_bg_color: 109/205,55/105,86/195,1    
+            
+        MDTopAppBar:
+            id: appbar_custom
+            type: "small"  
+            padding:[dp(15),dp(15),dp(15),dp(35)]
+            #spacing:dp(25)
+                
+            MDFabButton:
+                icon: "content-save"
+                style: "standard" 
+                color_map: "tertiary" 
+                theme_bg_color: "Custom"
+                md_bg_color: "blue" 
+                on_release: root.save_record()  
+                
+
+            

@@ -1,0 +1,148 @@
+<LoginScreen>
+    name: "login"
+    md_bg_color: self.theme_cls.primaryContainerColor
+    num_record: "11"
+    label1: "Text"
+    MDBoxLayout:
+        orientation: "vertical"
+ 
+        MDTopAppBar:
+            type: "small" 
+            #pos_hint: {'y': 0.9}
+            theme_bg_color:"Custom"
+            md_bg_color: 0.5, .3, .3, 1
+
+            MDTopAppBarTitle:
+                text: "Основной экран"
+                text_color: "white"
+                pos_hint: {"center_x": .5, "center_y": .5,}
+                adaptive_height: True
+                font_style: "Headline"
+                role: "medium"
+                
+
+            MDTopAppBarTrailingButtonContainer:    
+                MDActionTopAppBarButton:
+                    icon: "folder"
+                    theme_icon_color: "Custom"
+                    icon_color: "white"
+                    on_release: app.go_to_recods()
+                    MDBadge:
+                        text: root.num_record
+
+        MDGridLayout:
+            #size_hint_y:.75
+            cols:2
+            padding:[dp(15),dp(15),dp(15),dp(35)]
+            spacing:dp(25)
+            
+
+            MDCard:
+                md_bg_color:109/205,55/105,86/195,1
+                elevation : 3
+                padding:dp(15)
+                spacing:dp(15)
+                radius:dp(15)
+                ripple_behavior: True
+                
+                orientation:'vertical'
+                Image:
+                    source:"assets/bluetooth_9y1ejm33ionx_128.png"
+                    height: root.height * 0.4
+                MDLabel:
+                    halign: "center"  
+                    valign: "middle"  
+                    text: "Выбор устройства"
+                    font_size: "23sp"
+                    
+                MDLabel:
+                    id: label1
+                    halign: "center"  # Align text horizontally to the center
+                    valign: "middle"  # Align text vertically to the middle
+                    text: root.label1
+                    font_size: "19sp"
+            
+            MDCard:
+                md_bg_color:109/205,55/105,86/195,1
+                elevation : 3
+                padding:dp(15)
+                spacing:dp(15)
+                radius:dp(15)
+                ripple_behavior: True
+                
+                orientation:'vertical'
+                Image:
+                    source:"assets/bluetooth_9y1ejm33ionx_128.png"
+                    height: root.height * 0.4
+                MDLabel:
+                    halign: "center"  
+                    valign: "middle"  
+                    text: "Выбор устройства"
+                    font_size: "23sp"
+                    
+                MDLabel:
+                    id: label1
+                    halign: "center"  # Align text horizontally to the center
+                    valign: "middle"  # Align text vertically to the middle
+                    text: root.label1
+                    font_size: "19sp"
+            
+            MDCard:
+                md_bg_color:109/205,55/105,86/195,1
+                padding:dp(15)
+                spacing:dp(15)
+                radius:dp(15)
+    
+                
+                orientation:'vertical'
+                Image:
+                    source:"assets/bluetooth_9y1ejm33ionx_128.png"
+                    height: root.height * 0.4
+                MDLabel:
+                    halign: "center"  
+                    valign: "middle"  
+                    text: "Выбор устройства"
+                    font_size: "23sp"
+                    
+                MDLabel:
+                    id: label1
+                    halign: "center"  # Align text horizontally to the center
+                    valign: "middle"  # Align text vertically to the middle
+                    text: root.label1
+                    font_size: "19sp"
+
+
+        
+        MDTopAppBar:
+            id: appbar_custom
+            type: "small"
+            padding:dp(15)
+            spacing:dp(15)      
+            MDTopAppBarLeadingButtonContainer:
+
+                MDActionTopAppBarButton:
+                    icon: "menu"
+                    theme_icon_color: "Custom"
+                    icon_color: "green"
+                    on_release: app.open_left_menu(self)
+                    #MDBadge:
+                    #    text: "12"
+
+            MDTopAppBarTitle:
+                pos_hint: {"center_x": .5, "center_y": .5}
+                text: "AppBar small"
+                theme_text_color: "Custom"
+                text_color: "green"
+
+            MDTopAppBarTrailingButtonContainer:
+                MDActionTopAppBarButton:
+                    icon: "dots-vertical"
+                    theme_icon_color: "Custom"
+                    on_release: app.open_right_menu(self)
+                    icon_color: "green"
+            
+            
+            
+            
+
+        

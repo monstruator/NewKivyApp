@@ -1,0 +1,145 @@
+<NewRecordScreen>
+    name: "new_record"
+    md_bg_color: self.theme_cls.primaryContainerColor
+    text_date: ""
+    text_time1: ""
+    text_time2: ""
+    text_name: ""
+    text_description: ""
+    text_temp: ""
+    text_presure: ""
+    text_hum: ""
+
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            type: "small" 
+            theme_bg_color:"Custom"
+            md_bg_color: 0.2, .3, .3, 1
+            
+            MDTopAppBarLeadingButtonContainer:    
+                MDActionTopAppBarButton:
+                    icon: "menu"
+                    theme_icon_color: "Custom"
+                    icon_color: "white"
+                    on_release: app.open_left_menu(self)
+
+            MDTopAppBarTitle:
+                text: "Новый объект"
+                text_color: "white"
+                pos_hint: {"center_x": .5}
+                font_style: "Headline"
+                role: "small"
+
+            MDTopAppBarTrailingButtonContainer:    
+                MDActionTopAppBarButton:
+                    icon: "arrow-left"
+                    theme_icon_color: "Custom"
+                    icon_color: "white"
+                    on_release: app.go_to_recods()
+                    
+        
+        ScrollView:
+            MDGridLayout:
+                id: custom_widget_box
+                size_hint_y: None
+                cols:1
+                height: self.minimum_height
+                padding:[dp(15),dp(15),dp(15),dp(35)]
+                spacing:dp(25)
+
+                MDTextField:
+                    id: name_field
+                    mode: "outlined"
+                    text: root.text_name
+                    on_text: root.on_text_change(self.text)
+                    MDTextFieldHintText:
+                        text: "Имя пробы"
+                    MDTextFieldMaxLengthText:
+                        max_text_length: 30
+
+                MDTextField:
+                    id: date_field
+                    mode: "outlined"
+                    text: root.text_date
+                    on_focus: root.open_date_picker(self.focus)
+                    MDTextFieldHintText:
+                        text: "Введите дату"
+                    #MDTextFieldHelperText:
+                    #    text: "MM.DD.YYYY"
+                    #    mode: "persistent"
+                        
+                MDTextField:
+                    id: time1_field
+                    mode: "outlined"
+                    text: root.text_time1
+                    on_focus: root.open_time_picker1(self.focus)
+                    MDTextFieldHintText:
+                        text: "Введите время начала измерения"
+                
+                MDTextField:
+                    id: time2_field
+                    mode: "outlined"
+                    text: root.text_time2
+                    on_focus: root.open_time_picker2(self.focus)
+                    MDTextFieldHintText:
+                        text: "Введите время окончания измерения"
+                    #MDTextFieldHelperText:
+
+                MDLabel:
+                    text: "Объект измерения"
+
+                MDTextField:
+                    id: description_field
+                    #mode: "outlined"
+                    text: root.text_description
+                    on_text: root.on_descr_change(self.text)
+                    multiline: True
+                    size_hint_y: None
+                    #height: self.minimum_height
+                    #MDTextFieldHintText:
+                    #    text: "Объект измерения"
+
+                MDLabel:
+                    text: "Условия в месте измерений:"
+
+                MDTextField:
+                    id: presure_field
+                    mode: "outlined"
+                    text: root.text_presure
+                    on_text: root.on_presure_change(self.text)
+                    MDTextFieldHintText:
+                        text: "Атмосферное давление, кПа"
+                    
+                MDTextField:
+                    id: temp_field
+                    mode: "outlined"
+                    text: root.text_temp
+                    on_text: root.on_temp_change(self.text)
+                    MDTextFieldHintText:
+                        text: "Tемпература воздуха, гр.С"
+                
+                MDTextField:
+                    id: hum_field
+                    mode: "outlined"
+                    text: root.text_hum
+                    on_text: root.on_hum_change(self.text)
+                    MDTextFieldHintText:
+                        text: "Относительная влажность, %"                 
+#-------------------------------------------------------------------------------------------------            
+        MDTopAppBar:
+            id: appbar_custom
+            type: "small"  
+            padding:[dp(15),dp(15),dp(15),dp(35)]
+            #spacing:dp(25)
+                
+            MDFabButton:
+                icon: "content-save"
+                style: "standard" 
+                color_map: "tertiary" 
+                theme_bg_color: "Custom"
+                md_bg_color: "blue" 
+                on_release: root.save_record()  
+                
+
+            

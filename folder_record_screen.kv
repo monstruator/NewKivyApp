@@ -1,0 +1,70 @@
+<FolderRecordScreen>
+    name: "foler_record"
+    md_bg_color: self.theme_cls.primaryContainerColor
+    num_record: "11"
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            type: "small" 
+            theme_bg_color:"Custom"
+            md_bg_color: 0.2, .3, .3, 1
+            
+
+
+            MDTopAppBarTitle:
+                text: "Добавить объект в активные"
+                text_color: "white"
+                pos_hint: {"center_x": .5}
+                font_style: "Headline"
+                role: "medium"
+
+            MDTopAppBarTrailingButtonContainer:    
+                MDActionTopAppBarButton:
+                    icon: "arrow-left"
+                    theme_icon_color: "Custom"
+                    icon_color: "white"
+                    on_release: app.go_to_recods()
+                    
+        ScrollView:
+            MDGridLayout:
+                id: custom_widget_box
+                size_hint_y: None
+                cols:1
+                height: self.minimum_height
+                padding:[dp(15),dp(15),dp(15),dp(35)]
+                spacing:dp(25)
+            
+        MDTopAppBar:
+            id: appbar_custom
+            type: "small"  
+            
+ #-----------------------------------------------------------------------------   
+<MyCardMD1>:
+    style: "elevated"
+    orientation: 'vertical'
+    size_hint_y: None
+    
+    height: list1.height + dp(10)  # Adjust as needed
+    
+    
+    theme_bg_color: 'Custom'
+    md_bg_color:root.color
+
+    MDListItem:
+        id: list1
+        theme_bg_color: 'Custom'
+        md_bg_color: 109/205,55/105,86/195,1
+        MDListItemHeadlineText:
+            id: label1
+            text: root.text1
+        MDListItemSupportingText:
+            id: label2
+            text: root.text2
+        MDListItemSupportingText:
+            id: label3
+            text: root.text3
+
+
+   
+
+        
