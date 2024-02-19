@@ -21,6 +21,8 @@ from kivymd.uix.button import MDIconButton
 from kivymd.uix.list import  MDListItemSupportingText, MDListItemTertiaryText, MDListItemTrailingIcon, MDListItemHeadlineText
 from kivymd.uix.pickers import MDModalDatePicker
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivy.uix.relativelayout import RelativeLayout
+
 # from kivymd.uix.textfield import (
 #     MDTextField,
 #     MDTextFieldLeadingIcon,
@@ -67,6 +69,17 @@ class MyCardMD1(MDCard):
         if 'color' in kwargs:
             self.color = kwargs['color']
 
+class MeasCard(RelativeLayout):
+    pass
+    # text1 = StringProperty('')
+    # text2 = StringProperty('')
+    # text3 = StringProperty('')
+    # color = ListProperty([0, 1, 1, 1])  # Default color is white
+    # def __init__(self, **kwargs):
+    #     super().__init__(**kwargs)
+    #     if 'color' in kwargs:
+    #         self.color = kwargs['color']
+
 class ManagerScreens(MDScreenManager):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -74,6 +87,7 @@ class ManagerScreens(MDScreenManager):
                 LoginScreen(name='login'), 
                 RecordScreen(name='record'),
                 NewRecordScreen(name='new_record'),
+                ObjRecordScreen(name='obj_record'),
                 FolderRecordScreen(name='folder_record'),
             ]
         for screen in screens:
@@ -82,26 +96,36 @@ class ManagerScreens(MDScreenManager):
         
 class MyCard(MDCard):
     text = StringProperty()
+
 #-------------------------------------------------- ObjRecordScreen ------------------------------------------------
 class ObjRecordScreen(MDScreen):
     dialog = None
     warning =None
     date = ""
     time = ""
+    current_record = None
+    id = None
 
     def on_enter(self):
-        self.text_date =  "Введите дату"
-        self.text_time1 =  "Введите время"
-        self.text_time2 =  "Введите время"
-        self.text_name = ""
-        self.text_description = ""
+        name =  App.get_running_app().current_record
+        print("Edit item:", )
+        current_record = search_record(name)
+        card = MeasCard()
+        self.ids.custom_widget_box.add_widget(card)
+        self.id = current_record[0]
+        self.text_date =  current_record[8]
+        self.text_time1 =  current_record[9]
+        self.text_time2 =  current_record[10]
+        self.text_description = current_record[2]
+        print(current_record)
+        self.text_name = self.ids.name_field.text = current_record[1]
         
-        self.entered_date = ""
-        self.entered_time1 = ""
-        self.entered_time2 = ""
-        self.presure = None
-        self.temp = None
-        self.hum = None
+        self.presure = current_record[4]
+        self.ids.presure_field.text = str(current_record[4])
+        self.temp = current_record[5]
+        self.ids.temp_field.text = str(current_record[5])
+        self.hum = current_record[6]
+        self.ids.hum_field.text = str(current_record[6])
 
     def open_date_picker(self, focus):
         if not focus:
@@ -110,15 +134,8 @@ class ObjRecordScreen(MDScreen):
         if not self.dialog:
             self.dialog = MDModalDatePicker
             if self.dialog:
-                self.date_picker = self.dialog(
-                    mode="picker",
-                    mark_today=True,
-                )
-                self.date_picker.bind(
-                    on_ok=self.on_ok,
-                    on_cancel=self.on_cancel,
-                    on_dismiss=self.on_dialog_dismiss
-                )
+                self.date_picker = self.dialog(mode="picker", mark_today=True,)
+                self.date_picker.bind(on_ok=self.on_ok, on_cancel=self.on_cancel, on_dismiss=self.on_dialog_dismiss)
                 self.date_picker.pos = [
                     self.ids.date_field.center_x - self.date_picker.width / 2,
                     self.ids.date_field.y - (self.date_picker.height + dp(32)),
@@ -132,7 +149,6 @@ class ObjRecordScreen(MDScreen):
         formatted_date = date_object.strftime("%d.%m.%Y")
         print(formatted_date)
         self.text_date = formatted_date
-        self.entered_date = date_object
         self.on_cancel()
 
     def on_cancel(self, *args):
@@ -149,17 +165,10 @@ class ObjRecordScreen(MDScreen):
         hour = now.hour
         minute = now.minute
         print("open_time_picker1")
-        # dialog = MDTimePickerInput
         dialog = MDTimePickerDialVertical
         if dialog:
-            self.time_picker1 = dialog(
-                hour=str(hour),
-                minute=str(minute),
-            )
-            self.time_picker1.bind(
-                on_ok=self.time_ok1,
-                on_cancel=self.time_cancel1,
-            )
+            self.time_picker1 = dialog(hour=str(hour),minute=str(minute),)
+            self.time_picker1.bind(on_ok=self.time_ok1,on_cancel=self.time_cancel1,)
             self.time_picker1.open()
 
     def open_time_picker2(self, focus):
@@ -169,7 +178,6 @@ class ObjRecordScreen(MDScreen):
         hour = now.hour
         minute = now.minute
         print("open_time_picker2")
-        # dialog = MDTimePickerInput
         dialog = MDTimePickerDialVertical
         if dialog:
             self.time_picker2 = dialog(
@@ -186,14 +194,12 @@ class ObjRecordScreen(MDScreen):
         time_str1 = self.time_picker1.time.strftime('%H:%M:%S')
         print(time_str1)
         self.text_time1 = time_str1
-        self.entered_time1 = self.time_picker1.time
         self.time_cancel1()
 
     def time_ok2(self, *args):
         time_str2 = self.time_picker2.time.strftime('%H:%M:%S')
         print(time_str2)
         self.text_time2 = time_str2
-        self.entered_time2 = self.time_picker2.time
         self.time_cancel2()
 
     def time_cancel1(self, *args):
@@ -218,11 +224,11 @@ class ObjRecordScreen(MDScreen):
     def save_record(self):
         # create_table() 
         text_err = ""
-        if not self.entered_time2:
+        if not self.text_time2:
             text_err = "Введите время окончания измерения"  
-        if not self.entered_time1:
+        if not self.text_time1:
             text_err = "Введите время начала измерения"
-        if not self.entered_date:
+        if not self.text_date:
             text_err = "Введите дату измерения" 
         if not self.text_name:
             text_err = "Введите имя пробы" 
@@ -250,11 +256,8 @@ class ObjRecordScreen(MDScreen):
                 MDDialogSupportingText(text=text_err,),
             ).open()
             return
-        # efile_name = self.entered_date.strftime("%d.%m.%Y") + " " + self.entered_time.strftime('%H:%M:%S')
-        # print("save_record ", file_name)
-        print(self.text_name, self.text_description, 0, self.presure, self.temp, self.hum, type(self.text_date), self.text_time1, self.text_time2)
-        insert_record(self.text_name, self.text_description, 0, self.presure, self.temp, self.hum, self.text_date, self.text_time1, self.text_time2)
-        # insert_data(self.text_name, 0, file_name)
+        print(self.text_name, self.text_description, 0, self.presure, self.temp, self.hum, self.text_date, self.text_time1, self.text_time2)
+        update_record(self.id, self.text_name, self.text_description, 0, self.presure, self.temp, self.hum, self.text_date, self.text_time1, self.text_time2)
         print(load_data()) 
         screen_manager = self.manager
         screen_manager.current = 'record'
@@ -562,17 +565,7 @@ class RecordScreen(MDScreen):
             
     def add_card(self, text1, text2, text3, color):
         grid_layout = self.ids.custom_widget_box  # Accessing the MDGridLayout
-        # list_item = MDListItem( 
-        #     MDListItemHeadlineText(text=text1,),
-        #     MDListItemSupportingText(text=text2,),
-        #     MDListItemTertiaryText(text=text3,),
-        # )
-        # icon_btn = MDIconButton(icon="trash-can-outline",
-        #                         pos_hint={'center_y': .5},
-        #                         on_release=lambda x: self.icon_click(list_item))
-        # list_item.add_widget(icon_btn)
-        # list_item.text1 = text1
-        # grid_layout.add_widget(list_item)
+
         list_item = MDListItem()
         list_item.text1 = text1
         icon_btn = MDIconButton(icon="file-edit",
@@ -606,8 +599,11 @@ class RecordScreen(MDScreen):
     
     def icon_edit_click(self, list_item):
         if list_item:
-            text1 = list_item.text1
-            print("Edit item:", text1)
+            
+            App.get_running_app().current_record = list_item.text1
+            App.get_running_app().go_to_obj(list_item.text1)
+            
+            # app.go_to_folder_recods()
             # res = update_is_active(text1,0)
             # if res:
             #     grid_layout = self.ids.custom_widget_box 
@@ -622,7 +618,7 @@ class LoginScreen(MDScreen):
 left_menu = [
     "Объект измерений", "Рабочее сечение точки", "Ввод первичных данных",
     "Расчет плотности газа","Расчет влажности газа","Просмотр результатов",
-    "Изокинетический отбор","Соединение с СБ-1","Соединение с СБ-1"
+    "Изокинетический отбор"
 ]
 right_menu = [
     "Сохранить", "Сформировать отчет", "ОТправить", "Настройки"
@@ -630,6 +626,7 @@ right_menu = [
 
 
 class Live(App, MDApp):
+    current_record = None
     KV_FILES = {
         os.path.join(os.getcwd(), "login_screen.kv"),
         os.path.join(os.getcwd(), "record_screen.kv"),
@@ -661,12 +658,14 @@ class Live(App, MDApp):
         if args[1] == 32:
             self.rebuild()
 
-    def open_left_menu(self, item):
+    def open_left_menu(self, item, exclude):
+        filtered_menu = [i for idx, i in enumerate(left_menu) if idx != exclude]
+
         menu_items = [
             {
                 "text": f"{i}",
                 "on_release": lambda x=f"Item {i}": self.menu_callback(x),
-            } for i in left_menu
+            } for i in filtered_menu
         ]
         MDDropdownMenu(caller=item, items=menu_items).open()
 
@@ -703,5 +702,10 @@ class Live(App, MDApp):
         self.manager_screens.current = 'login'
         screen2 = self.manager_screens.get_screen('login')
         print(screen2)
+
+    def go_to_obj(self, text):
+        self.manager_screens.current = 'obj_record'
+        screen2 = self.manager_screens.get_screen('obj_record')
+        print(screen2, text)
 
 Live().run()

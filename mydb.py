@@ -31,21 +31,6 @@ def create_table():
         print('Error create table')
 
 def insert_record(name, descr, count, presure, temp, hum, date, time_start, time_end):
-    """
-    Inserts a new record into the 'records' table.
-
-    Args:
-        conn: SQLite database connection.
-        name: Name value.
-        descr: Description value.
-        count: Count value.
-        presure: Pressure value.
-        temp: Temperature value.
-        hum: Humidity value.
-        date: Date value (in ISO8601 format).
-        time_start: Start time value (in HH:MM:SS format).
-        time_end: End time value (in HH:MM:SS format).
-    """
     try:
         connection = sqlite3.connect('data.db')
         cursor = connection.cursor()
@@ -99,6 +84,44 @@ def update_is_active(text1, status):
         print("Error update_is_active")
         return 0
 
+def search_record(search_name):
+    # Connect to the SQLite database
+    conn = sqlite3.connect('data.db')
+    cursor = conn.cursor()
+    query = "SELECT * FROM records WHERE name = ?"
+    cursor.execute(query, (search_name,))
+    records = cursor.fetchone()
+    conn.close()
+    return records
+
+def update_record(id, name, descr, count, presure, temp, hum, date, time_start, time_end):
+    try:
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+        cursor.execute("""
+            UPDATE records
+            SET name = ?,
+                descr = ?,
+                count = ?,
+                presure = ?,
+                temp = ?,
+                hum = ?,
+                date = ?,
+                time_start = ?,
+                time_end = ?
+            WHERE id = ?
+        """, (name, descr, count, presure, temp, hum, date, time_start, time_end, id))
+        connection.commit()
+
+        if cursor.rowcount == 0:
+            print("No record found with the specified ID.")
+        else:
+            print("Record updated successfully!")
+
+    except sqlite3.Error as e:
+        print(f"Error updating record: {e}")
+    finally:
+        connection.close()
 
 # def insert_data(name, count, filename):
 #     try:
