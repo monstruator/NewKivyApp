@@ -22,6 +22,6 @@ class SectionScreen(MDScreen):
         self.current_record = search_record(name)
         self.id = self.current_record[0]
         self.ids.proba_name_bar.text = self.current_record[1]
-        print("Edit meas for item:",self.current_record) 
+        print("Edit section for item:",self.current_record) 
         measures = fetch_records_by_record_id(self.id)
         

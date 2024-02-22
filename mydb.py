@@ -4,7 +4,7 @@ from datetime import datetime
 def create_table():
     # Connect to the SQLite database (or create it if it doesn't exist)
     try:
-        connection = sqlite3.connect('data.db')
+        connection = sqlite3.connect('DB/data.db')
         cursor = connection.cursor()
         
         create_table_query = '''
@@ -22,7 +22,6 @@ def create_table():
                 time_end TEXT
             );
         '''
-        #file_name TEXT UNIQUE,
         cursor.execute(create_table_query)
         connection.commit()
 
@@ -41,6 +40,22 @@ def create_table():
         cursor.execute(create_table_query)
         connection.commit()
 
+        create_table_query = '''
+            CREATE TABLE IF NOT EXISTS SectionTable (
+                id INTEGER PRIMARY KEY,
+                record_id INTEGER,
+                length REAL,
+                form INTEGER,
+                diameter REAL,
+                min_side REAL,
+                max_side REAL,
+                double_quantity INTEGER,
+                FOREIGN KEY(record_id) REFERENCES records(id)
+            )
+        '''
+        cursor.execute(create_table_query)
+        connection.commit()
+
         connection.close()
         print('Table created')
     except:
@@ -48,21 +63,27 @@ def create_table():
 
 def insert_record(name, descr, count, presure, temp, hum, date, time_start, time_end):
     try:
-        connection = sqlite3.connect('data.db')
+        connection = sqlite3.connect('DB/data.db')
         cursor = connection.cursor()
         cursor.execute("""
             INSERT INTO records (name, descr, count, presure, temp, hum, date, time_start, time_end)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (name, descr, count, presure, temp, hum, date, time_start, time_end))
         connection.commit()
+        record_id = cursor.lastrowid
         print("Record inserted successfully!")
+        return record_id
     except sqlite3.Error as e:
         print(f"Error inserting record: {e}")
+        return None
+    finally:
+        if connection:
+            connection.close()
 
 def add_measurement(record_id, measurement_details):
     connection = None
     try:
-        connection = sqlite3.connect('data.db')
+        connection = sqlite3.connect('DB/data.db')
         cursor = connection.cursor()
         cursor.execute("""
             INSERT INTO MeasurTable (record_id, p1, p2, p3, p4, p5)
@@ -82,7 +103,7 @@ def add_measurement(record_id, measurement_details):
 def update_measurement(id, record_id, measurement_details):
     connection = None
     try:
-        connection = sqlite3.connect('data.db')
+        connection = sqlite3.connect('DB/data.db')
         cursor = connection.cursor()
         cursor.execute("""
             UPDATE MeasurTable
@@ -103,7 +124,7 @@ def update_measurement(id, record_id, measurement_details):
 def delete_measurement(id, record_id):
     connection = None
     try:
-        connection = sqlite3.connect('data.db')
+        connection = sqlite3.connect('DB/data.db')
         cursor = connection.cursor()
         cursor.execute("""
             SELECT id FROM MeasurTable WHERE id=? AND record_id=?
@@ -128,7 +149,7 @@ def delete_measurement(id, record_id):
     
 def load_data():
     try:
-        connection = sqlite3.connect('data.db')
+        connection = sqlite3.connect('DB/data.db')
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM records")
         rows = cursor.fetchall()
@@ -139,7 +160,7 @@ def load_data():
 
 def clear_table():
     try:
-        conn = sqlite3.connect('data.db')
+        conn = sqlite3.connect('DB/data.db')
         cursor = conn.cursor()
         table_name = 'records'
         cursor.execute(f'DELETE FROM {table_name}')
@@ -152,7 +173,7 @@ def clear_table():
 
 def update_is_active(text1, status):
     try:
-        conn = sqlite3.connect('data.db')
+        conn = sqlite3.connect('DB/data.db')
         cursor = conn.cursor()
         sql = '''UPDATE records
                 SET is_active = ?
@@ -169,7 +190,7 @@ def update_is_active(text1, status):
 
 def search_record(search_name):
     # Connect to the SQLite database
-    conn = sqlite3.connect('data.db')
+    conn = sqlite3.connect('DB/data.db')
     cursor = conn.cursor()
     query = "SELECT * FROM records WHERE name = ?"
     cursor.execute(query, (search_name,))
@@ -179,7 +200,7 @@ def search_record(search_name):
 
 def update_record(id, name, descr, count, presure, temp, hum, date, time_start, time_end):
     try:
-        connection = sqlite3.connect('data.db')
+        connection = sqlite3.connect('DB/data.db')
         cursor = connection.cursor()
         cursor.execute("""
             UPDATE records
@@ -207,7 +228,7 @@ def update_record(id, name, descr, count, presure, temp, hum, date, time_start, 
         connection.close()
 
 def fetch_records_by_record_id(record_id):
-    conn = sqlite3.connect('data.db')
+    conn = sqlite3.connect('DB/data.db')
     cur = conn.cursor()
 
     try:
@@ -221,9 +242,41 @@ def fetch_records_by_record_id(record_id):
         conn.close()
 
 
+def insert_section_record(record_id, length=0, form=0, diameter=0, min_side=0, max_side=0, double_quantity=0):
+    try:
+        connection = sqlite3.connect('DB/data.db')
+        cursor = connection.cursor()
+        cursor.execute("""
+            INSERT INTO SectionTable (record_id, length, form, diameter, min_side, max_side, double_quantity)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (record_id, length, form, diameter, min_side, max_side, double_quantity))
+        connection.commit()
+        print("Record added successfully to SectionTable.")
+        if connection:
+            connection.close()
+        return 1
+    except sqlite3.Error as e:
+        print(f"Error adding record to SectionTable: {e}")
+        if connection:
+            connection.close()
+        return 0
+        
+def fetch_section(record_id):
+    conn = sqlite3.connect('DB/data.db')
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT * FROM MeasurTable WHERE record_id = ?", (record_id,))
+        records = cur.fetchall()
+        return records
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")
+        return []
+    finally:
+        conn.close()
+
 # def insert_data(name, count, filename):
 #     try:
-#         connection = sqlite3.connect('data.db')
+#         connection = sqlite3.connect('DB/data.db')
 #         cursor = connection.cursor()
 #         cursor.execute("INSERT INTO records (name, count, file_name, is_active) VALUES (?, ?, ?, ?)", (name, count, filename, 1))
 #         connection.commit()

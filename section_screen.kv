@@ -111,47 +111,23 @@
                                     padding_x: "12dp"
                                     pos_hint: {'center_x': .6, 'center_y': .5}
                                 
-                            
+                        Widget:
+                            id: circular_widget
+                            canvas:
+                                Color:
+                                    rgba: 1, 0, 0, 1
+                                Ellipse:
+                                    pos: self.pos
+                                    size: self.size
 
-                        MDTextField:
-                            id: p1
-                            mode: "outlined"
-                            text: ""
-                            #on_text: root.on_presure_change(self.text)
-                            MDTextFieldHintText:
-                                text: "Рабочее давление, кПа"
-                        
-                        MDTextField:
-                            id: p2
-                            mode: "outlined"
-                            text: ""
-                            #on_text: root.on_presure_change(self.text)
-                            MDTextFieldHintText:
-                                text: "Контрольное давление, кПа"
-
-                        MDTextField:
-                            id: p3
-                            mode: "outlined"
-                            text: ""
-                            #on_text: root.on_presure_change(self.text)
-                            MDTextFieldHintText:
-                                text: "Полное давление, кПа"
-
-                        MDTextField:
-                            id: p4
-                            mode: "outlined"
-                            text: ""
-                            #on_text: root.on_presure_change(self.text)
-                            MDTextFieldHintText:
-                                text: "Ротаметра давление, кПа"
-
-                        MDTextField:
-                            id: p5
-                            mode: "outlined"
-                            text: ""
-                            #on_text: root.on_presure_change(self.text)
-                            MDTextFieldHintText:
-                                text: "Атмосферное давление, кПа"
+                        Widget:
+                            id: rectangular_widget
+                            canvas:
+                                Color:
+                                    rgba: 0, 0, 1, 1
+                                Rectangle:
+                                    pos: self.pos
+                                    size: self.size
 
                         Spacer:
                         
