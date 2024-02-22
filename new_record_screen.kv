@@ -44,6 +44,7 @@
                 id: custom_widget_box
                 size_hint_y: None
                 cols:1
+                height: "1400dp"
                 height: self.minimum_height
                 padding:[dp(15),dp(15),dp(15),dp(35)]
                 spacing:dp(25)
@@ -56,7 +57,7 @@
                     MDTextFieldHintText:
                         text: "Имя пробы"
                     MDTextFieldMaxLengthText:
-                        max_text_length: 30
+                        max_text_length: 20
 
                 MDTextField:
                     id: date_field
@@ -125,7 +126,12 @@
                     text: root.text_hum
                     on_text: root.on_hum_change(self.text)
                     MDTextFieldHintText:
-                        text: "Относительная влажность, %"                 
+                        text: "Относительная влажность, %"
+                Spacer10:                 
+                Spacer10:
+                Spacer10:
+                Spacer10:                 
+                Spacer10:               
 #-------------------------------------------------------------------------------------------------            
         MDTopAppBar:
             id: appbar_custom

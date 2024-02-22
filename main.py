@@ -22,6 +22,10 @@ from kivymd.uix.list import  MDListItemSupportingText, MDListItemTertiaryText, M
 from kivymd.uix.pickers import MDModalDatePicker
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.uix.relativelayout import RelativeLayout
+from kivy.base import EventLoop
+from meas_record_screen import MeasRecordScreen
+from section_screen import SectionScreen
+from kivymd.uix.selectioncontrol import MDCheckbox
 
 # from kivymd.uix.textfield import (
 #     MDTextField,
@@ -90,6 +94,7 @@ class ManagerScreens(MDScreenManager):
                 ObjRecordScreen(name='obj_record'),
                 FolderRecordScreen(name='folder_record'),
                 MeasRecordScreen(name='meas_record'),
+                SectionScreen(name='section_screen'),
             ]
         for screen in screens:
             self.add_widget(screen)
@@ -98,19 +103,6 @@ class ManagerScreens(MDScreenManager):
 class MyCard(MDCard):
     text = StringProperty()
 
-
-class MeasRecordScreen(MDScreen):
-    dialog = None
-    warning =None
-    date = ""
-    time = ""
-    current_record = None
-    id = None
-
-    def on_enter(self):
-        name =  App.get_running_app().current_record
-        current_record = search_record(name)
-        print("Edit meas for item:",current_record)        
 
 #-------------------------------------------------- ObjRecordScreen ------------------------------------------------
 class ObjRecordScreen(MDScreen):
@@ -125,6 +117,7 @@ class ObjRecordScreen(MDScreen):
         name =  App.get_running_app().current_record
         print("Edit item:", )
         current_record = search_record(name)
+        self.ids.proba_name_bar.text = current_record[1]
         # self.card = MeasCard()
         # self.ids.custom_widget_box.add_widget(self.card)
         self.id = current_record[0]
@@ -254,8 +247,8 @@ class ObjRecordScreen(MDScreen):
         if not self.text_description:
             text_err = "Введите описание объекта измерений"     
            
-        if len(self.text_name) > 30:
-            text_err = "Имя пробы превышает 30 символов"
+        if len(self.text_name) > 20:
+            text_err = "Имя пробы превышает 20 символов"
         try:
             self.hum = float(self.hum)
         except:
@@ -481,8 +474,8 @@ class NewRecordScreen(MDScreen):
         if not self.text_description:
             text_err = "Введите описание объекта измерений"     
            
-        if len(self.text_name) > 30:
-            text_err = "Имя пробы превышает 30 символов"
+        if len(self.text_name) > 20:
+            text_err = "Имя пробы превышает 20 символов"
         try:
             self.hum = float(self.hum)
         except:
@@ -583,7 +576,7 @@ class LoginScreen(MDScreen):
         self.label1 = "Какой-то текст"
 
 left_menu = [
-    "Объект измерений", "Измерения","Рабочее сечение точки", "Ввод первичных данных",
+    "Объект измерений", "Измерения", "Рабочее сечение и точки", "Ввод первичных данных",
     "Расчет плотности газа","Расчет влажности газа","Просмотр результатов",
     "Изокинетический отбор"
 ]
@@ -591,7 +584,7 @@ right_menu = [
     "Сохранить", "Сформировать отчет", "ОТправить", "Настройки"
 ]
 
-
+#------------------------------------------------------------ APP -----------------------------------------
 class Live(App, MDApp):
     current_record = None
     KV_FILES = {
@@ -601,6 +594,7 @@ class Live(App, MDApp):
         os.path.join(os.getcwd(), "folder_record_screen.kv"),
         os.path.join(os.getcwd(), "obj_record_screen.kv"),
         os.path.join(os.getcwd(), "meas_record_screen.kv"),
+        os.path.join(os.getcwd(), "section_screen.kv"),
         # os.path.join(os.getcwd(), "manager_screens.kv"),
     }
 
@@ -611,7 +605,7 @@ class Live(App, MDApp):
         "NewRecordScreen":"new_record_screen",
         "ObjRecordScreen":"obj_record_screen",
         "MeasRecordScreen":"meas_record_screen",
-
+        "SectionRecordScreen":"section_screen",
     }
     AUTORELOADER_PATHS = [(os.getcwd(), {"recursive": False})]
 
@@ -619,8 +613,10 @@ class Live(App, MDApp):
 
     def build_app(self):
         create_table()
+        # self.icon = 'icon.png'
         self.manager_screens = ManagerScreens()
         Window.bind(on_reyboard=self._rebuild)
+        EventLoop.window.bind(on_keyboard=self.hook_keyboard)
         # Window.size = [1050, 1000]
         return self.manager_screens
     
@@ -629,7 +625,7 @@ class Live(App, MDApp):
             self.rebuild()
 
     def open_left_menu(self, item, exclude):
-        filtered_menu = [i for idx, i in enumerate(left_menu) if idx != exclude]
+        filtered_menu = left_menu#[i for idx, i in enumerate(left_menu) if idx != exclude]
 
         menu_items = [
             {
@@ -654,20 +650,13 @@ class Live(App, MDApp):
     
     def menu_l_callback(self, text_item):
         print(text_item)
+        if text_item == left_menu[0]:
+            self.go_to_obj()
         if text_item == left_menu[1]:
-            print("go_to_meas")
             self.go_to_meas()
-
-    def save_meas(self):
-        record = search_record(self.current_record)
-        # measurement_details = (1,2,3,4,5)
-        # add_measurement(record[0], measurement_details)
-        print(record[0], self.current_record)
-        measures = fetch_records_by_record_id(record[0])
-        if measures:
-            print(len(measures))
-        else:
-            print("Измерения для записи не найдены")
+        if text_item == left_menu[2]:
+            self.go_to_section()
+            
 
     def go_to_folder_recods(self):
         self.manager_screens.current = 'folder_record'
@@ -694,6 +683,17 @@ class Live(App, MDApp):
 
     def go_to_meas(self,):
         self.manager_screens.current = 'meas_record'
+    
+    def go_to_section(self,):
+        self.manager_screens.current = 'section_screen'
+
+    def hook_keyboard(self, window, key, *largs):
+        if key == 27:
+            if self.manager_screens.current == 'new_record' or self.manager_screens.current == 'folder_record' or self.manager_screens.current == 'obj_record':
+                self.go_to_recods()
+            if self.manager_screens.current == 'meas_record' or self.manager_screens.current == 'section_screen':
+                self.go_to_obj()
+        return True
 
 
 Live().run()

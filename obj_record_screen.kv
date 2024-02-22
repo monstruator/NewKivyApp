@@ -126,8 +126,13 @@
                     size_hint_x: .3
                     text: "Всего измерений: 0"
                     font_style: "Display"
-                    role: "small"     
-                
+                    role: "small" 
+                        
+                Spacer10:                 
+                Spacer10:
+                Spacer10:
+                Spacer10:                 
+                Spacer10: 
                 MDBoxLayout:
                           
 #-------------------------------------------------------------------------------------------------            
@@ -146,6 +151,7 @@
                     on_release: app.open_left_menu(self, 0)
 
             MDTopAppBarTitle:
+                id: proba_name_bar
                 pos_hint: {"center_x": .5, "center_y": .5}
                 text: " "
                 theme_text_color: "Custom"
@@ -157,7 +163,7 @@
                 color_map: "tertiary" 
                 theme_bg_color: "Custom"
                 md_bg_color: "blue" 
-                on_release: root.save_meas()  
+                on_release: root.save_record()  
                 
 
 

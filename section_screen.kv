@@ -1,4 +1,4 @@
-<MeasRecordScreen>
+<SectionScreen>
     name: "obj_record"
     md_bg_color: self.theme_cls.primaryContainerColor
     text_date: ""
@@ -18,7 +18,7 @@
             md_bg_color: 0.2, .3, .3, 1
 
             MDTopAppBarTitle:
-                text: "Измерения"
+                text: "Рабочее сечение и точки"
                 text_color: "white"
                 pos_hint: {"center_x": .5}
                 font_style: "Headline"
@@ -46,70 +46,72 @@
                     md_bg_color: self.theme_cls.primaryContainerColor
                     md_bg_color_disabled: self.theme_cls.primaryContainerColor
                     ripple_behavior: False
+
                     Widget:
                         size_hint_x: .05
                       
-                    MDBoxLayout:
+                    MDBoxLayout: #основной бокс в середине на 0.8 по х
                         size_hint_x: .8
                         orientation: "vertical"
                         spacing: "25dp"
                         padding: "12dp"
-                        
-                        MDLabel:
-                            font_style: "Title"
-                            role: "medium"
-                            text: "Просмотр и редактирование измерений"  
 
                         MDBoxLayout:
                             orientation: "horizontal"
-                            spacing: "22dp"    
-                            CustomButton:
-                                #icon: "minus"
-                                icon: "arrow-left-thick"
-                                on_release: root.prev_meas() 
-                            CustomButton:
-                                #icon: "plus"
-                                icon: "arrow-right-thick"
-                                on_release: root.next_meas()    
-                            CustomButton:
-                                #icon: "content-save"
-                                icon: "receipt-text-edit-outline"
-                                on_release: root.update_meas() 
-                            CustomButton:
-                                icon: "trash-can"
-                                on_release: root.delete_meas()
-                             
+                                
+                            MDLabel:
+                                size_hint_x: .4
+                                font_style: "Title"
+                                role: "medium"
+                                text: "Длина линейного участка" 
+
+                            MDTextField:
+                                size_hint_x: .15
+                                id: part_len
+                                mode: "filled"
+                                text: "0"
+                                #on_text: root.on_temp_change(self.text)
+                                
+                            Widget:
+                                size_hint_x: .45
+
                         Spacer:
 
                         MDBoxLayout:
                             orientation: "horizontal"
-                            spacing: "22dp" 
+                                
+                            MDLabel:
+                                size_hint_x: .4
+                                font_style: "Title"
+                                role: "medium"
+                                text: "Форма сечения" 
 
-                            MDLabel:
-                                size_hint_x: .3
-                                text: "Изм "
-                                font_style: "Title"
-                                role: "large"
+                            MDBoxLayout:
+                                MDCheckbox:
+                                    group: 'group'
+                                    size_hint: None, None
+                                    size: dp(48), dp(48)
+                                    active: True
+                                    pos_hint: {'center_x': .1, 'center_y': .5}
+                                MDLabel:
+                                    text: "Круглая"
+                                    adaptive_height: True
+                                    padding_x: "12dp"
+                                    pos_hint: {'center_x': .2, 'center_y': .5}
+                                MDCheckbox:
+                                    
+                                    group: 'group'
+                                    size_hint: None, None
+                                    size: dp(48), dp(48)
+                                    active: True
+                                    pos_hint: {'center_x': .5, 'center_y': .5}
+                                MDLabel:
+                                    text: "прямоугольная"
+                                    adaptive_height: True
+                                    padding_x: "12dp"
+                                    pos_hint: {'center_x': .6, 'center_y': .5}
+                                
                             
-                            MDTextField:
-                                size_hint_x: .25
-                                id: n_record
-                                mode: "outlined"
-                                text: "0"
-                                #on_text: root.on_temp_change(self.text)
-                            
-                            MDLabel:
-                                size_hint_x: .10
-                                text: "/"
-                                font_style: "Title"
-                                role: "large"
-                            
-                            MDLabel:
-                                id: total_meas
-                                size_hint_x: .25
-                                text: "0"
-                                font_style: "Title"
-                                role: "large"
 
                         MDTextField:
                             id: p1
@@ -226,6 +228,7 @@
             MDTopAppBarTitle:
                 id: proba_name_bar
                 pos_hint: {"center_x": .5, "center_y": .5}
+                text: " "
                 theme_text_color: "Custom"
                 text_color: "green"
 
