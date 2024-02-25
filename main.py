@@ -499,10 +499,10 @@ class NewRecordScreen(MDScreen):
         # print("save_record ", file_name)
         print(self.text_name, self.text_description, 0, self.presure, self.temp, self.hum, type(self.text_date), self.text_time1, self.text_time2)
         id = insert_record(self.text_name, self.text_description, 0, self.presure, self.temp, self.hum, self.text_date, self.text_time1, self.text_time2)
-        res = 0
-        if id:
-            res = insert_section_record(id)
-        if res == 0:
+        # res = 0
+        # if id:
+        #     res = insert_section_record(id)
+        if id == 0:
             MDDialog(
                 MDDialogHeadlineText(text="Ошибка создания записи",),
                 MDDialogSupportingText(text="Обратитесь к разработчику",),
@@ -617,7 +617,7 @@ class Live(App, MDApp):
     }
     AUTORELOADER_PATHS = [(os.getcwd(), {"recursive": False})]
 
-    AUTORELOADER_IGNORE_PATTERNS = ["data.db", "*.pyc", "*__pycache__*", "*.pkl", ]
+    AUTORELOADER_IGNORE_PATTERNS = ["*.pyc", "*__pycache__*", "*.pkl", "*.txt",]
 
     def build_app(self):
         create_table()

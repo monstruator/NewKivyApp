@@ -19,7 +19,13 @@ def create_table():
                 is_active INTEGER DEFAULT 1,
                 date TEXT, 
                 time_start TEXT,
-                time_end TEXT
+                time_end TEXT,
+                length REAL DEFAULT 0,
+                form INTEGER DEFAULT 0,
+                diameter REAL DEFAULT 0,
+                min_side REAL DEFAULT 0,
+                max_side REAL DEFAULT 0,
+                double_quantity INTEGER DEFAULT 0
             );
         '''
         cursor.execute(create_table_query)
@@ -40,21 +46,21 @@ def create_table():
         cursor.execute(create_table_query)
         connection.commit()
 
-        create_table_query = '''
-            CREATE TABLE IF NOT EXISTS SectionTable (
-                id INTEGER PRIMARY KEY,
-                record_id INTEGER,
-                length REAL,
-                form INTEGER,
-                diameter REAL,
-                min_side REAL,
-                max_side REAL,
-                double_quantity INTEGER,
-                FOREIGN KEY(record_id) REFERENCES records(id)
-            )
-        '''
-        cursor.execute(create_table_query)
-        connection.commit()
+        # create_table_query = '''
+        #     CREATE TABLE IF NOT EXISTS SectionTable (
+        #         id INTEGER PRIMARY KEY,
+        #         record_id INTEGER,
+        #         length REAL,
+        #         form INTEGER,
+        #         diameter REAL,
+        #         min_side REAL,
+        #         max_side REAL,
+        #         double_quantity INTEGER,
+        #         FOREIGN KEY(record_id) REFERENCES records(id)
+        #     )
+        # '''
+        # cursor.execute(create_table_query)
+        # connection.commit()
 
         connection.close()
         print('Table created')
@@ -242,37 +248,37 @@ def fetch_records_by_record_id(record_id):
         conn.close()
 
 
-def insert_section_record(record_id, length=0, form=0, diameter=0, min_side=0, max_side=0, double_quantity=0):
-    try:
-        connection = sqlite3.connect('DB/data.db')
-        cursor = connection.cursor()
-        cursor.execute("""
-            INSERT INTO SectionTable (record_id, length, form, diameter, min_side, max_side, double_quantity)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        """, (record_id, length, form, diameter, min_side, max_side, double_quantity))
-        connection.commit()
-        print("Record added successfully to SectionTable.")
-        if connection:
-            connection.close()
-        return 1
-    except sqlite3.Error as e:
-        print(f"Error adding record to SectionTable: {e}")
-        if connection:
-            connection.close()
-        return 0
+# def insert_section_record(record_id, length=0, form=0, diameter=0, min_side=0, max_side=0, double_quantity=0):
+#     try:
+#         connection = sqlite3.connect('DB/data.db')
+#         cursor = connection.cursor()
+#         cursor.execute("""
+#             INSERT INTO SectionTable (record_id, length, form, diameter, min_side, max_side, double_quantity)
+#             VALUES (?, ?, ?, ?, ?, ?, ?)
+#         """, (record_id, length, form, diameter, min_side, max_side, double_quantity))
+#         connection.commit()
+#         print("Record added successfully to SectionTable.")
+#         if connection:
+#             connection.close()
+#         return 1
+#     except sqlite3.Error as e:
+#         print(f"Error adding record to SectionTable: {e}")
+#         if connection:
+#             connection.close()
+#         return 0
         
-def fetch_section(record_id):
-    conn = sqlite3.connect('DB/data.db')
-    cur = conn.cursor()
-    try:
-        cur.execute("SELECT * FROM MeasurTable WHERE record_id = ?", (record_id,))
-        records = cur.fetchall()
-        return records
-    except sqlite3.Error as e:
-        print(f"An error occurred: {e}")
-        return []
-    finally:
-        conn.close()
+# def fetch_section(record_id):
+#     conn = sqlite3.connect('DB/data.db')
+#     cur = conn.cursor()
+#     try:
+#         cur.execute("SELECT * FROM MeasurTable WHERE record_id = ?", (record_id,))
+#         records = cur.fetchall()
+#         return records
+#     except sqlite3.Error as e:
+#         print(f"An error occurred: {e}")
+#         return []
+#     finally:
+#         conn.close()
 
 # def insert_data(name, count, filename):
 #     try:

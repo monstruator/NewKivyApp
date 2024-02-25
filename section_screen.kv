@@ -12,15 +12,16 @@
 
     MDBoxLayout:
         orientation: "vertical"
+        
         MDTopAppBar:
             type: "small" 
             theme_bg_color:"Custom"
             md_bg_color: 0.2, .3, .3, 1
-
+            padding: "24dp"
             MDTopAppBarTitle:
                 text: "Рабочее сечение и точки"
                 text_color: "white"
-                pos_hint: {"center_x": .5}
+                #pos_hint: {"center_x": .5}
                 font_style: "Headline"
                 role: "small"
 
@@ -30,162 +31,77 @@
                     theme_icon_color: "Custom"
                     icon_color: "white"
                     on_release: app.go_to_obj()
-                    
+        
         ScrollView:
             MDGridLayout:
                 id: custom_widget_box
                 size_hint_y: None
                 cols:1
-                height: self.minimum_height
-                padding:[dp(15),dp(15),dp(15),dp(35)]
-                spacing:dp(25)
-                height: "1400dp"
+                #height: self.minimum_height
+                padding:[dp(25),dp(15),dp(15),dp(35)]
+                #spacing:dp(25)
+                height: "1500dp" #1000dp
 
-                MDCard:
-                    theme_bg_color:"Custom"
-                    md_bg_color: self.theme_cls.primaryContainerColor
-                    md_bg_color_disabled: self.theme_cls.primaryContainerColor
-                    ripple_behavior: False
+                MDTextField:
+                    id: part_len
+                    size_hint_x: None  # Disable automatic width adjustment based on the parent container
+                    width: root.width / 2
+                    #size_hint_x: .4
+                    
+                    text: "0"
+                    #pos_hint: { "center_y": .5}
+                    MDTextFieldHintText:
+                        text: "Длина линейного участка"
+            
+                Spacer:
 
-                    Widget:
-                        size_hint_x: .05
-                      
-                    MDBoxLayout: #основной бокс в середине на 0.8 по х
-                        size_hint_x: .8
-                        orientation: "vertical"
-                        spacing: "25dp"
-                        padding: "12dp"
+                MDLabel:
+                #size_hint_x: .1
+                    adaptive_height: True
+                    font_style: "Title"
+                    role: "medium"
+                    text: "Форма сечения"
+                    #pos_hint: {'center_x': .8, "center_y": .8}
 
-                        MDBoxLayout:
-                            orientation: "horizontal"
-                                
-                            MDLabel:
-                                size_hint_x: .4
-                                font_style: "Title"
-                                role: "medium"
-                                text: "Длина линейного участка" 
+                MDBoxLayout: 
+                    #md_bg_color: "red"
+                    adaptive_height: True
+                    #pos_hint: {'center_x': .1, "center_y": .5}
+                    #size_hint_x: .6
+                    padding: "24dp"
+                    #spacing: "24dp"
+                    
+                    MDCheckbox:
+                        id: circle_checkbox
+                        group: 'group'
+                        active: True
+                        pos_hint: {'center_x': .9, "center_y": .4}
+                        on_active: root.on_checkbox_active(0)
+                    MDLabel:
+                        text: "Круглая"
+                        pos_hint: {'center_x': .8, "center_y": .4}
+                
+                    MDCheckbox:
+                        id: rectangle_checkbox
+                        group: 'group'
+                        active: True
+                        pos_hint: {'center_x': .1, "center_y": .4}
+                        on_active: root.on_checkbox_active(1)
+                    MDLabel:
+                        text: "прямоугольная"
+                        pos_hint: {'center_x': .2, "center_y": .4}
 
-                            MDTextField:
-                                size_hint_x: .15
-                                id: part_len
-                                mode: "filled"
-                                text: "0"
-                                #on_text: root.on_temp_change(self.text)
-                                
-                            Widget:
-                                size_hint_x: .45
+                Spacer: 
+                Spacer:
+                Spacer:
 
-                        Spacer:
-
-                        MDBoxLayout:
-                            orientation: "horizontal"
-                                
-                            MDLabel:
-                                size_hint_x: .4
-                                font_style: "Title"
-                                role: "medium"
-                                text: "Форма сечения" 
-
-                            MDBoxLayout:
-                                MDCheckbox:
-                                    group: 'group'
-                                    size_hint: None, None
-                                    size: dp(48), dp(48)
-                                    active: True
-                                    pos_hint: {'center_x': .1, 'center_y': .5}
-                                MDLabel:
-                                    text: "Круглая"
-                                    adaptive_height: True
-                                    padding_x: "12dp"
-                                    pos_hint: {'center_x': .2, 'center_y': .5}
-                                MDCheckbox:
-                                    
-                                    group: 'group'
-                                    size_hint: None, None
-                                    size: dp(48), dp(48)
-                                    active: True
-                                    pos_hint: {'center_x': .5, 'center_y': .5}
-                                MDLabel:
-                                    text: "прямоугольная"
-                                    adaptive_height: True
-                                    padding_x: "12dp"
-                                    pos_hint: {'center_x': .6, 'center_y': .5}
-                                
-                        Widget:
-                            id: circular_widget
-                            canvas:
-                                Color:
-                                    rgba: 1, 0, 0, 1
-                                Ellipse:
-                                    pos: self.pos
-                                    size: self.size
-
-                        Widget:
-                            id: rectangular_widget
-                            canvas:
-                                Color:
-                                    rgba: 0, 0, 1, 1
-                                Rectangle:
-                                    pos: self.pos
-                                    size: self.size
-
-                        Spacer:
-                        
-                        MDBoxLayout:
-                            orientation: "horizontal"
-                            spacing: "22dp" 
-                            #theme_bg_color:"Custom"
-                            #md_bg_color: 0.2, .3, .3, 1 
-                            MDLabel:
-                                font_style: "Title"
-                                role: "large"
-                                text: "Создание нового измерения"  
-
-                            CustomButton:
-                                pos_hint: {"center_x": .5}
-                                #icon: "content-save"
-                                icon: "file-document-plus-outline"
-                                on_release: root.new_meas()
-   
-                        MDTextField:
-                            id: p1n
-                            mode: "outlined"
-                            MDTextFieldHintText:
-                                text: "Рабочее давление, кПа"
-                        
-                        MDTextField:
-                            id: p2n
-                            mode: "outlined"
-                            MDTextFieldHintText:
-                                text: "Контрольное давление, кПа"
-
-                        MDTextField:
-                            id: p3n
-                            mode: "outlined"
-                            MDTextFieldHintText:
-                                text: "Полное давление, кПа"
-
-                        MDTextField:
-                            id: p4n
-                            mode: "outlined"
-                            MDTextFieldHintText:
-                                text: "Ротаметра давление, кПа"
-
-                        MDTextField:
-                            id: p5n
-                            mode: "outlined"
-                            MDTextFieldHintText:
-                                text: "Атмосферное давление, кПа"
-                            
-                        Spacer:
-                        Spacer:
-                        Spacer:
-                        Spacer:
-                        Spacer:
-                        Spacer:
-                    MDBoxLayout:   
-                        size_hint_x: .05    
-                          
+                MDBoxLayout:
+                    #md_bg_color: "blue"
+                    id: selection_widget
+                    orientation: "vertical"
+                
+            
+                #MDBoxLayout:                  
 #-------------------------------------------------------------------------------------------------            
         MDTopAppBar:
             id: appbar_custom
@@ -217,30 +133,6 @@
     size_hint_y: None
     height: "120dp"
 
-#<MeasCard>:
+
     
                 
-
-<CustomButton@MDFabButton>
-    icon: "content-save"
-    style: "standard"
-    color_map: "tertiary"
-    theme_bg_color: "Custom"
-    md_bg_color: 0.4, .4, .7, 1
-    
-    #size_hint_x: .2
-    #size_hint_y: None  # Disable vertical size hint
-    #height: dp(56)  # Set the height to 56dp
-    
-    #style: "filled"
-    #theme_width: "Custom"
-    #height: "56dp"
-    #size_hint_x: .5
-    #MDButtonIcon:
-    #    x: text.x - (self.width + dp(10))
-    #    icon: root.icon
-
-    #MDButtonText:
-    #    id: text
-    #    text: root.text
-    #    pos_hint: {"center_x": .5, "center_y": .5}
