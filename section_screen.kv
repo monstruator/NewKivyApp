@@ -40,7 +40,9 @@
                 #height: self.minimum_height
                 padding:[dp(25),dp(15),dp(15),dp(35)]
                 #spacing:dp(25)
-                height: "1500dp" #1000dp
+                height: "3500dp" 
+
+                Spacer:
 
                 MDTextField:
                     id: part_len
@@ -53,6 +55,7 @@
                     MDTextFieldHintText:
                         text: "Длина линейного участка"
             
+                Spacer:
                 Spacer:
 
                 MDLabel:
@@ -91,14 +94,35 @@
                         text: "прямоугольная"
                         pos_hint: {'center_x': .2, "center_y": .4}
 
+
+                Spacer: 
+
+                MDBoxLayout:
+                    spacing: "44dp"
+                    adaptive_height: True
+                    MDLabel:
+                        text:"Удвоить число точек "
+                        font_style:"Title"
+                        role:"medium"
+                        #size_hint_x: 0.8
+                        
+                    MDSwitch:
+                        id: double_poins_id
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        on_active: root.double_points_switch(*args)
+                        
+                    Widget:    
+                
+
+
                 Spacer: 
                 Spacer:
                 Spacer:
 
-                MDBoxLayout:
-                    #md_bg_color: "blue"
-                    id: selection_widget
-                    orientation: "vertical"
+                #MDBoxLayout:
+                #    #md_bg_color: "blue"
+                #    id: selection_widget
+                #    orientation: "vertical"
                 
             
                 #MDBoxLayout:                  

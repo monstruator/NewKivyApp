@@ -204,34 +204,68 @@ def search_record(search_name):
     conn.close()
     return records
 
-def update_record(id, name, descr, count, presure, temp, hum, date, time_start, time_end):
+def update_record(record_id, name, descr, count, pressure, temp, hum, is_active, date, time_start, time_end, length=0, form=0, diameter=0, min_side=0, max_side=0, double_quantity=0):
     try:
-        connection = sqlite3.connect('DB/data.db')
-        cursor = connection.cursor()
+        conn = sqlite3.connect('DB/data.db')
+        cursor = conn.cursor()
+        
         cursor.execute("""
-            UPDATE records
+            UPDATE records 
             SET name = ?,
                 descr = ?,
                 count = ?,
                 presure = ?,
                 temp = ?,
                 hum = ?,
+                is_active = ?,
                 date = ?,
                 time_start = ?,
-                time_end = ?
+                time_end = ?,
+                length = ?,
+                form = ?,
+                diameter = ?,
+                min_side = ?,
+                max_side = ?,
+                double_quantity = ?
             WHERE id = ?
-        """, (name, descr, count, presure, temp, hum, date, time_start, time_end, id))
-        connection.commit()
+        """, (name, descr, count, pressure, temp, hum, is_active, date, time_start, time_end, length, form, diameter, min_side, max_side, double_quantity, record_id))
 
-        if cursor.rowcount == 0:
-            print("No record found with the specified ID.")
-        else:
-            print("Record updated successfully!")
-
+        # Commit the transaction
+        conn.commit()
+        
+        print("Record updated successfully")
     except sqlite3.Error as e:
-        print(f"Error updating record: {e}")
-    finally:
-        connection.close()
+        print("Error updating record:", e)
+
+    
+# def update_record(id, name, descr, count, presure, temp, hum, date, time_start, time_end,):
+#     try:
+#         connection = sqlite3.connect('DB/data.db')
+#         cursor = connection.cursor()
+#         cursor.execute("""
+#             UPDATE records
+#             SET name = ?,
+#                 descr = ?,
+#                 count = ?,
+#                 presure = ?,
+#                 temp = ?,
+#                 hum = ?,
+#                 date = ?,
+#                 time_start = ?,
+#                 time_end = ?
+#             WHERE id = ?
+#         """, (name, descr, count, presure, temp, hum, date, time_start, time_end, id))
+#         connection.commit()
+
+#         if cursor.rowcount == 0:
+#             print("No record found with the specified ID.")
+#         else:
+#             print("Record updated successfully!")
+
+#     except sqlite3.Error as e:
+#         print(f"Error updating record: {e}")
+#     finally:
+#         connection.close()
 
 def fetch_records_by_record_id(record_id):
     conn = sqlite3.connect('DB/data.db')

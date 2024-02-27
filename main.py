@@ -269,7 +269,7 @@ class ObjRecordScreen(MDScreen):
             ).open()
             return
         print(self.text_name, self.text_description, 0, self.presure, self.temp, self.hum, self.text_date, self.text_time1, self.text_time2)
-        update_record(self.id, self.text_name, self.text_description, 0, self.presure, self.temp, self.hum, self.text_date, self.text_time1, self.text_time2)
+        update_record(self.id, self.text_name, self.text_description, 0, self.presure, self.temp, self.hum, 1, self.text_date, self.text_time1, self.text_time2)
         print(load_data()) 
         screen_manager = self.manager
         screen_manager.current = 'record'
