@@ -1,0 +1,166 @@
+<CalcDryScreen>
+    name: "obj_record"
+    md_bg_color: self.theme_cls.primaryContainerColor
+    text_date: ""
+    text_time1: ""
+    text_time2: ""
+    text_name: ""
+    text_description: ""
+    text_temp: ""
+    text_presure: ""
+    text_hum: ""
+
+    MDBoxLayout:
+        orientation: "vertical"
+        
+        MDTopAppBar:
+            type: "small" 
+            theme_bg_color:"Custom"
+            md_bg_color: 0.2, .3, .3, 1
+            # padding: "24dp"
+            # spacing: dp(25)
+            MDTopAppBarTitle:
+                text: "Расчет плотности газа"
+                text_color: "white"
+                pos_hint: {"center_x": .5}
+                font_style: "Title"
+                role: "large"
+
+            MDTopAppBarTrailingButtonContainer:
+                MDActionTopAppBarButton:
+                    theme_bg_color:"Custom"
+                    md_bg_color: 0.2, .7, .3, 1
+                    icon: "arrow-left"
+                    theme_icon_color: "Custom"
+                    icon_color: "white"
+                    on_release: app.go_to_obj()
+                    
+            Widget:
+        
+        ScrollView:
+            MDGridLayout:
+                id: custom_widget_box
+                size_hint_y: None
+                cols:1
+                #height: self.minimum_height
+                padding: [dp(10),dp(10),dp(10),dp(10)]
+                spacing: dp(10)
+                #height: "3500dp" 
+
+                # Spacer:
+
+                MDBoxLayout:
+                    adaptive_height: True
+                    orientation: "vertical"
+                    spacing: "10dp"
+
+                    MDLabel:
+                        halign: 'center'
+                        font_style: "Title"
+                        role: "medium"
+                        text: "Расчет плотности сухого газа в нормальных условиях"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    
+                    MDLabel:
+                        halign: 'center'
+                        font_style: "Title"
+                        role: "small"
+                        text: "(при 0 \u00B0C; 101.3 кПа)"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    
+                Spacer:
+
+                MDLabel:
+                    adaptive_height: True
+                    text: "Плотность смеси газов [b]р=[color=#FFA500]  2.456 [/color][/b] кг/м³"
+                    font_style: "Title"
+                    role: "medium"
+                    markup: True
+                
+                Spacer:
+
+                MDLabel:
+                    text: "[b]Состав газовой смеси:[/b]"
+                    font_style: "Title"
+                    role: "medium"
+                    markup: True
+                    adaptive_height: True
+
+                Spacer:
+
+                MDBoxLayout:
+                    adaptive_height: True
+                    orientation: "vertical"
+                    spacing: "30dp"
+                    padding: [dp(10),dp(20),dp(10),dp(20)]
+                    theme_bg_color:"Custom"
+                    md_bg_color: 0.6, .8, .9, 1
+
+                    MDLabel:
+                        font_style: "Title"
+                        role: "medium"
+                        text: "Компонент 1 - Воздух"
+                        
+                    MDLabel:
+                        font_style: "Title"
+                        role: "medium"
+                        text: "Плотность 1 (кг/м³) = 1.293"
+
+                    MDLabel:
+                        id: air_part
+                        font_style: "Title"
+                        role: "medium"
+                        text: "Объемная доля 1(%) = 100"
+              
+
+                Spacer: 
+                
+
+                #MDBoxLayout:
+                #    #md_bg_color: "blue"
+                #    id: selection_widget
+                #    orientation: "vertical"
+                
+            
+                #MDBoxLayout:                  
+#-------------------------------------------------------------------------------------------------            
+        MDTopAppBar:
+            id: appbar_custom
+            type: "small"  
+            padding:[dp(15),dp(15),dp(15),dp(35)]
+            #spacing:dp(25)
+                
+            MDTopAppBarLeadingButtonContainer:
+
+                MDActionTopAppBarButton:
+                    icon: "menu"
+                    theme_icon_color: "Custom"
+                    icon_color: "green"
+                    on_release: app.open_left_menu(self, 1)
+
+            MDTopAppBarTitle:
+                id: proba_name_bar
+                pos_hint: {"center_x": .5, "center_y": .5}
+                text: " "
+                theme_text_color: "Custom"
+                text_color: "green"
+
+            #MDFabButton:
+            #    icon: "plus"
+            #    style: "standard" 
+            #    color_map: "tertiary" 
+            #    theme_bg_color: "Custom"
+            #    md_bg_color: "blue"   
+            #    on_release: root.go_to_newrecods()
+                
+
+                
+<Check1@MDCheckbox>:
+    group: 'group'
+    size_hint: None, None
+    size: dp(48), dp(48)
+
+    
+                

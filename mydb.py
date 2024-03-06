@@ -9,7 +9,7 @@ def create_table():
         
         create_table_query = '''
             CREATE TABLE IF NOT EXISTS records (
-                id INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY, 
                 name TEXT UNIQUE,
                 descr TEXT,
                 count INTEGER,
@@ -25,7 +25,20 @@ def create_table():
                 diameter REAL DEFAULT 0,
                 min_side REAL DEFAULT 0,
                 max_side REAL DEFAULT 0,
-                double_quantity INTEGER DEFAULT 0
+                double_quantity INTEGER DEFAULT 0,
+                n_points INTEGER DEFAULT 0,
+
+                contr_tube REAL DEFAULT 1,
+                work_tube REAL DEFAULT 1,
+                temp_gas REAL DEFAULT 0,
+                p_dry_gas REAL DEFAULT 0,
+                f_wet_gas REAL DEFAULT 0,
+                
+                p_choise INTEGER DEFAULT 0,
+                f_choise INTEGER DEFAULT 0,
+
+                p_dry_calc REAL DEFAULT 0,
+                f_wet_calc REAL DEFAULT 0
             );
         '''
         cursor.execute(create_table_query)
@@ -40,6 +53,8 @@ def create_table():
                 p3 REAL,
                 p4 REAL,
                 p5 REAL,
+                n_point INTEGER DEFAULT 0,
+                in_calc INTEGER DEFAULT 1,
                 FOREIGN KEY(record_id) REFERENCES records(id)
             )
         '''
@@ -92,8 +107,8 @@ def add_measurement(record_id, measurement_details):
         connection = sqlite3.connect('DB/data.db')
         cursor = connection.cursor()
         cursor.execute("""
-            INSERT INTO MeasurTable (record_id, p1, p2, p3, p4, p5)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO MeasurTable (record_id, p1, p2, p3, p4, p5, n_point, in_calc)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """, (record_id,) + tuple(measurement_details))
         connection.commit()
         print("Measurement added successfully to existing record.")
@@ -106,16 +121,16 @@ def add_measurement(record_id, measurement_details):
             connection.close()
         return 0
 
-def update_measurement(id, record_id, measurement_details):
+def update_measurement(id, measurement_details):
     connection = None
     try:
         connection = sqlite3.connect('DB/data.db')
         cursor = connection.cursor()
         cursor.execute("""
             UPDATE MeasurTable
-            SET p1=?, p2=?, p3=?, p4=?, p5=?
-            WHERE id=? AND record_id=?
-        """, tuple(measurement_details) + (id, record_id))
+            SET record_id=?, p1=?, p2=?, p3=?, p4=?, p5=?, n_point=?, in_calc=?
+            WHERE id=?
+        """, tuple(measurement_details) + (id,))
         connection.commit()
         print("Measurement updated successfully.")
         if connection:
@@ -126,6 +141,27 @@ def update_measurement(id, record_id, measurement_details):
         if connection:
             connection.close()
         return 0    
+    
+# def update_measurement(id, record_id, measurement_details):
+#     connection = None
+#     try:
+#         connection = sqlite3.connect('DB/data.db')
+#         cursor = connection.cursor()
+#         cursor.execute("""
+#             UPDATE MeasurTable
+#             SET p1=?, p2=?, p3=?, p4=?, p5=?, n_point=?, in_calc=?
+#             WHERE id=? AND record_id=?
+#         """, tuple(measurement_details) + (id, record_id))
+#         connection.commit()
+#         print("Measurement updated successfully.")
+#         if connection:
+#             connection.close()
+#         return 1
+#     except sqlite3.Error as e:
+#         print(f"Error updating measurement: {e}")
+#         if connection:
+#             connection.close()
+#         return 0    
         
 def delete_measurement(id, record_id):
     connection = None
@@ -204,7 +240,7 @@ def search_record(search_name):
     conn.close()
     return records
 
-def update_record(record_id, name, descr, count, pressure, temp, hum, is_active, date, time_start, time_end, length=0, form=0, diameter=0, min_side=0, max_side=0, double_quantity=0):
+def update_record(record_id, name, descr, count, pressure, temp, hum, is_active, date, time_start, time_end, length=0, form=0, diameter=0, min_side=0, max_side=0, double_quantity=0, n_points=0, contr_tube=0, work_tube=0, temp_gas=0, p_dry_gas=1.293, f_wet_gas=0, p_choise=0, f_choise=0, p_dry_calc=0, f_wet_calc=0):
     try:
         conn = sqlite3.connect('DB/data.db')
         cursor = conn.cursor()
@@ -226,9 +262,19 @@ def update_record(record_id, name, descr, count, pressure, temp, hum, is_active,
                 diameter = ?,
                 min_side = ?,
                 max_side = ?,
-                double_quantity = ?
+                double_quantity = ?,
+                n_points = ?,
+                contr_tube = ?,
+                work_tube = ?,
+                temp_gas = ?,
+                p_dry_gas = ?,
+                f_wet_gas = ?,
+                p_choise = ?,
+                f_choise = ?,
+                p_dry_calc = ?,
+                f_wet_calc = ?
             WHERE id = ?
-        """, (name, descr, count, pressure, temp, hum, is_active, date, time_start, time_end, length, form, diameter, min_side, max_side, double_quantity, record_id))
+        """, (name, descr, count, pressure, temp, hum, is_active, date, time_start, time_end, length, form, diameter, min_side, max_side, double_quantity, n_points, contr_tube, work_tube, temp_gas, p_dry_gas, f_wet_gas, p_choise, f_choise, p_dry_calc, f_wet_calc, record_id))
 
         # Commit the transaction
         conn.commit()

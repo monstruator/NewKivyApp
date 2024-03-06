@@ -36,177 +36,220 @@
                 id: custom_widget_box
                 size_hint_y: None
                 cols:1
-                height: self.minimum_height
+                #height: self.minimum_height
                 padding:[dp(15),dp(15),dp(15),dp(35)]
                 spacing:dp(25)
-                height: "1400dp"
+                #height: "1800dp"
 
-                MDCard:
-                    theme_bg_color:"Custom"
-                    md_bg_color: self.theme_cls.primaryContainerColor
-                    md_bg_color_disabled: self.theme_cls.primaryContainerColor
-                    ripple_behavior: False
-                    Widget:
-                        size_hint_x: .05
+                #MDCard:
+                #    theme_bg_color:"Custom"
+                #    md_bg_color: self.theme_cls.primaryContainerColor
+                #    md_bg_color_disabled: self.theme_cls.primaryContainerColor
+                #    ripple_behavior: False
+                #    Widget:
+                #        size_hint_x: .05
                       
-                    MDBoxLayout:
-                        size_hint_x: .8
-                        orientation: "vertical"
-                        spacing: "25dp"
-                        padding: "12dp"
+                #MDBoxLayout:
+                #    size_hint_x: .8
+                #    orientation: "vertical"
+                #    spacing: "25dp"
+                #    padding: "12dp"
+                    
+                MDLabel:
+                    font_style: "Title"
+                    role: "medium"
+                    text: "Просмотр и редактирование измерений"  
+
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    spacing: "22dp"    
+                    CustomButton:
+                        #icon: "minus"
+                        icon: "arrow-left-thick"
+                        on_release: root.prev_meas() 
+                    CustomButton:
+                        #icon: "plus"
+                        icon: "arrow-right-thick"
+                        on_release: root.next_meas()    
+                    CustomButton:
+                        #icon: "content-save"
+                        icon: "receipt-text-edit-outline"
+                        on_release: root.update_meas() 
+                    CustomButton:
+                        icon: "trash-can"
+                        on_release: root.delete_meas()
                         
-                        MDLabel:
-                            font_style: "Title"
-                            role: "medium"
-                            text: "Просмотр и редактирование измерений"  
+                Spacer:
 
-                        MDBoxLayout:
-                            orientation: "horizontal"
-                            spacing: "22dp"    
-                            CustomButton:
-                                #icon: "minus"
-                                icon: "arrow-left-thick"
-                                on_release: root.prev_meas() 
-                            CustomButton:
-                                #icon: "plus"
-                                icon: "arrow-right-thick"
-                                on_release: root.next_meas()    
-                            CustomButton:
-                                #icon: "content-save"
-                                icon: "receipt-text-edit-outline"
-                                on_release: root.update_meas() 
-                            CustomButton:
-                                icon: "trash-can"
-                                on_release: root.delete_meas()
-                             
-                        Spacer:
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    spacing: "22dp" 
 
-                        MDBoxLayout:
-                            orientation: "horizontal"
-                            spacing: "22dp" 
+                    MDLabel:
+                        size_hint_x: .3
+                        text: "Изм "
+                        font_style: "Title"
+                        role: "large"
+                    
+                    MDTextField:
+                        size_hint_x: .25
+                        id: n_record
+                        mode: "outlined"
+                        text: "0"
+                        pos_hint: {"center_y": .5}
+                        #on_text: root.on_temp_change(self.text)
+                    
+                    MDLabel:
+                        size_hint_x: .10
+                        text: "/"
+                        font_style: "Title"
+                        role: "large"
+                    
+                    MDLabel:
+                        id: total_meas
+                        size_hint_x: .25
+                        text: "0"
+                        font_style: "Title"
+                        role: "large"
 
-                            MDLabel:
-                                size_hint_x: .3
-                                text: "Изм "
-                                font_style: "Title"
-                                role: "large"
-                            
-                            MDTextField:
-                                size_hint_x: .25
-                                id: n_record
-                                mode: "outlined"
-                                text: "0"
-                                #on_text: root.on_temp_change(self.text)
-                            
-                            MDLabel:
-                                size_hint_x: .10
-                                text: "/"
-                                font_style: "Title"
-                                role: "large"
-                            
-                            MDLabel:
-                                id: total_meas
-                                size_hint_x: .25
-                                text: "0"
-                                font_style: "Title"
-                                role: "large"
+                MDTextField:
+                    id: p1
+                    mode: "outlined"
+                    text: ""
+                    #on_text: root.on_presure_change(self.text)
+                    MDTextFieldHintText:
+                        text: "Рабочее динамическое давление, Па"
+                
+                MDTextField:
+                    id: p2
+                    mode: "outlined"
+                    text: ""
+                    #on_text: root.on_presure_change(self.text)
+                    MDTextFieldHintText:
+                        text: "Контрольное динамическое давление, Па"
 
-                        MDTextField:
-                            id: p1
-                            mode: "outlined"
-                            text: ""
-                            #on_text: root.on_presure_change(self.text)
-                            MDTextFieldHintText:
-                                text: "Рабочее давление, кПа"
+                MDTextField:
+                    id: p3
+                    mode: "outlined"
+                    text: ""
+                    #on_text: root.on_presure_change(self.text)
+                    MDTextFieldHintText:
+                        text: "Полное давление, Па"
+                    
+                MDTextField:
+                    id: n_point
+                    size_hint_x: .9
+                    mode: "outlined"
+                    MDTextFieldHintText:
+                        text: "Номер раб точки"
+                    
+                MDBoxLayout:
+                    adaptive_height: True
+                    orientation: "horizontal"
+                    #padding: [dp(25),dp(10),dp(10),dp(25)]
+                    spacing: dp(30)
+                    MDCheckbox:
+                        id: in_calc
+                        pos_hint: {'center_x': .1, "center_y": .5}
+                        #on_active: root.on_checkbox_active1(0)
                         
-                        MDTextField:
-                            id: p2
-                            mode: "outlined"
-                            text: ""
-                            #on_text: root.on_presure_change(self.text)
-                            MDTextFieldHintText:
-                                text: "Контрольное давление, кПа"
 
-                        MDTextField:
-                            id: p3
-                            mode: "outlined"
-                            text: ""
-                            #on_text: root.on_presure_change(self.text)
-                            MDTextFieldHintText:
-                                text: "Полное давление, кПа"
+                    MDLabel:
+                        text: "В расчете"
+                        font_style: "Label"
+                        role: "medium"
+                        markup: True
 
-                        MDTextField:
-                            id: p4
-                            mode: "outlined"
-                            text: ""
-                            #on_text: root.on_presure_change(self.text)
-                            MDTextFieldHintText:
-                                text: "Ротаметра давление, кПа"
+                #MDTextField:
+                #    id: p4
+                #    mode: "outlined"
+                #    text: ""
+                #    #on_text: root.on_presure_change(self.text)
+                #    MDTextFieldHintText:
+                #        text: "Ротаметра давление, кПа"
 
-                        MDTextField:
-                            id: p5
-                            mode: "outlined"
-                            text: ""
-                            #on_text: root.on_presure_change(self.text)
-                            MDTextFieldHintText:
-                                text: "Атмосферное давление, кПа"
+                #MDTextField:
+                #    id: p5
+                #    mode: "outlined"
+                #    text: ""
+                #    #on_text: root.on_presure_change(self.text)
+                #    MDTextFieldHintText:
+                #        text: "Атмосферное давление, кПа"
 
-                        Spacer:
-                        
-                        MDBoxLayout:
-                            orientation: "horizontal"
-                            spacing: "22dp" 
-                            #theme_bg_color:"Custom"
-                            #md_bg_color: 0.2, .3, .3, 1 
-                            MDLabel:
-                                font_style: "Title"
-                                role: "large"
-                                text: "Создание нового измерения"  
+                Spacer:
+                
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    spacing: "22dp" 
+                    #theme_bg_color:"Custom"
+                    #md_bg_color: 0.2, .3, .3, 1 
+                    MDLabel:
+                        font_style: "Title"
+                        role: "medium"
+                        text: "Создание нового измерения"  
 
-                            CustomButton:
-                                pos_hint: {"center_x": .5}
-                                #icon: "content-save"
-                                icon: "file-document-plus-outline"
-                                on_release: root.new_meas()
-   
-                        MDTextField:
-                            id: p1n
-                            mode: "outlined"
-                            MDTextFieldHintText:
-                                text: "Рабочее давление, кПа"
-                        
-                        MDTextField:
-                            id: p2n
-                            mode: "outlined"
-                            MDTextFieldHintText:
-                                text: "Контрольное давление, кПа"
+                    CustomButton:
+                        pos_hint: {"center_x": .5}
+                        #icon: "content-save"
+                        icon: "file-document-plus-outline"
+                        on_release: root.new_meas()
 
-                        MDTextField:
-                            id: p3n
-                            mode: "outlined"
-                            MDTextFieldHintText:
-                                text: "Полное давление, кПа"
+                MDTextField:
+                    id: p1n
+                    mode: "outlined"
+                    MDTextFieldHintText:
+                        text: "Рабочее динамическое давление, Па"
+                
+                MDTextField:
+                    id: p2n
+                    mode: "outlined"
+                    MDTextFieldHintText:
+                        text: "Контрольное динамическое давление, Па"
 
-                        MDTextField:
-                            id: p4n
-                            mode: "outlined"
-                            MDTextFieldHintText:
-                                text: "Ротаметра давление, кПа"
+                MDTextField:
+                    id: p3n
+                    mode: "outlined"
+                    MDTextFieldHintText:
+                        text: "Полное давление, Па"
+                    
+                MDTextField:
+                    id: n_point_n
+                    mode: "outlined"
+                    MDTextFieldHintText:
+                        text: "Номер раб точки"
+                
+                MDBoxLayout:
+                    adaptive_height: True
+                    orientation: "horizontal"
+                    #padding: [dp(25),dp(10),dp(10),dp(25)]
+                    spacing: dp(30)    
+                    MDCheckbox:
+                        id: in_calc_n
+                        pos_hint: {'center_x': .1, "center_y": .5}
+                        #on_active: root.on_checkbox_active1(0)
+                        active: True
 
-                        MDTextField:
-                            id: p5n
-                            mode: "outlined"
-                            MDTextFieldHintText:
-                                text: "Атмосферное давление, кПа"
-                            
-                        Spacer:
-                        Spacer:
-                        Spacer:
-                        Spacer:
-                        Spacer:
-                        Spacer:
-                    MDBoxLayout:   
-                        size_hint_x: .05    
+                    MDLabel:
+                        text: "В расчете"
+                        font_style: "Label"
+                        role: "medium"
+                        markup: True
+
+                #MDTextField:
+                #    id: p4n
+                #    mode: "outlined"
+                #    MDTextFieldHintText:
+                #        text: "Ротаметра давление, кПа"
+
+                #MDTextField:
+                #    id: p5n
+                #    mode: "outlined"
+                #    MDTextFieldHintText:
+                #        text: "Атмосферное давление, кПа"
+                    
+                
+            #MDBoxLayout:   
+            #    size_hint_x: .05    
                           
 #-------------------------------------------------------------------------------------------------            
         MDTopAppBar:

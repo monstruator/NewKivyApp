@@ -25,7 +25,11 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.base import EventLoop
 from meas_record_screen import MeasRecordScreen
 from section_screen import SectionScreen
+from enter_data import EnterDataScreen
+from calc_dry import CalcDryScreen
+#!!!
 from kivymd.uix.selectioncontrol import MDCheckbox
+from kivy.utils import platform
 
 # from kivymd.uix.textfield import (
 #     MDTextField,
@@ -95,6 +99,9 @@ class ManagerScreens(MDScreenManager):
                 FolderRecordScreen(name='folder_record'),
                 MeasRecordScreen(name='meas_record'),
                 SectionScreen(name='section_screen'),
+                EnterDataScreen(name='enter_data_screen'),
+                CalcDryScreen(name='calc_dry_screen'),
+                #!!!
             ]
         for screen in screens:
             self.add_widget(screen)
@@ -603,7 +610,10 @@ class Live(App, MDApp):
         os.path.join(os.getcwd(), "obj_record_screen.kv"),
         os.path.join(os.getcwd(), "meas_record_screen.kv"),
         os.path.join(os.getcwd(), "section_screen.kv"),
+        os.path.join(os.getcwd(), "enter_data.kv"),
+        os.path.join(os.getcwd(), "calc_dry.kv"),
         # os.path.join(os.getcwd(), "manager_screens.kv"),
+        #!!!
     }
 
     CLASSES = {
@@ -614,6 +624,8 @@ class Live(App, MDApp):
         "ObjRecordScreen":"obj_record_screen",
         "MeasRecordScreen":"meas_record_screen",
         "SectionRecordScreen":"section_screen",
+        "EnterDataScreen":"enter_data_screen",
+        "CalcDryScreen":"calc_dry_screen", 
     }
     AUTORELOADER_PATHS = [(os.getcwd(), {"recursive": False})]
 
@@ -625,7 +637,8 @@ class Live(App, MDApp):
         self.manager_screens = ManagerScreens()
         Window.bind(on_reyboard=self._rebuild)
         EventLoop.window.bind(on_keyboard=self.hook_keyboard)
-        # Window.size = [1050, 1000]
+        if not platform == 'android':
+            Window.size = [1050, 1800]
         return self.manager_screens
     
     def _rebuild(self, *args):
@@ -657,14 +670,20 @@ class Live(App, MDApp):
         print(text_item)
     
     def menu_l_callback(self, text_item):
-        print(text_item)
+        print(text_item) #!!!
         if text_item == left_menu[0]:
             self.go_to_obj()
         if text_item == left_menu[1]:
             self.go_to_meas()
         if text_item == left_menu[2]:
             self.go_to_section()
+        if text_item == left_menu[3]:
+            self.go_to_enter_data()
+        if text_item == left_menu[4]:
+            self.go_to_calc_dry()
             
+    def go_to_enter_data(self):
+        self.manager_screens.current = 'enter_data_screen'
 
     def go_to_folder_recods(self):
         self.manager_screens.current = 'folder_record'
@@ -695,11 +714,16 @@ class Live(App, MDApp):
     def go_to_section(self,):
         self.manager_screens.current = 'section_screen'
 
+    def go_to_calc_dry(self,):
+        self.manager_screens.current = 'calc_dry_screen'
+
+    #!!!
+
     def hook_keyboard(self, window, key, *largs):
         if key == 27:
             if self.manager_screens.current == 'new_record' or self.manager_screens.current == 'folder_record' or self.manager_screens.current == 'obj_record':
                 self.go_to_recods()
-            if self.manager_screens.current == 'meas_record' or self.manager_screens.current == 'section_screen':
+            if self.manager_screens.current == 'meas_record' or self.manager_screens.current == 'section_screen' or self.manager_screens.current == 'enter_data_record' or self.manager_screens.current == 'calc_dry_screen':
                 self.go_to_obj()
         return True
 

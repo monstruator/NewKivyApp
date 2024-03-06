@@ -1,0 +1,353 @@
+<EnterDataScreen>
+    name: "obj_record"
+    md_bg_color: self.theme_cls.primaryContainerColor
+    text_date: ""
+    text_time1: ""
+    text_time2: ""
+    text_name: ""
+    text_description: ""
+    text_temp: ""
+    text_presure: ""
+    text_hum: ""
+
+    MDBoxLayout:
+        orientation: "vertical"
+        
+        MDTopAppBar:
+            type: "small" 
+            theme_bg_color:"Custom"
+            md_bg_color: 0.2, .3, .3, 1
+            # padding: "24dp"
+            # spacing: dp(25)
+            MDTopAppBarTitle:
+                text: "Ввод первичных данных"
+                text_color: "white"
+                pos_hint: {"center_x": .5}
+                font_style: "Title"
+                role: "large"
+
+            MDTopAppBarTrailingButtonContainer:
+                MDActionTopAppBarButton:
+                    theme_bg_color:"Custom"
+                    md_bg_color: 0.2, .7, .3, 1
+                    icon: "arrow-left"
+                    theme_icon_color: "Custom"
+                    icon_color: "white"
+                    on_release: app.go_to_obj()
+                    
+            Widget:
+        
+        ScrollView:
+            MDGridLayout:
+                id: custom_widget_box
+                size_hint_y: None
+                #adaptive_height: True
+                cols:1
+                #height: self.minimum_height
+                padding: [dp(10),dp(10),dp(10),dp(10)]
+                spacing: dp(10)
+                #height: "3500dp" 
+
+                # Spacer:
+
+                MDBoxLayout:
+                    adaptive_height: True
+                    MDLabel:
+                        halign: 'center'
+                        font_style: "Title"
+                        role: "medium"
+                        text: "Данные для расчета аэродинамических параметров потока"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    
+                Spacer:
+
+                MDLabel:
+                    # halign: 'center'
+                    font_style: "Title"
+                    role: "medium"
+                    text: "Сечение, размеры, точки"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                
+                MDBoxLayout:
+                    adaptive_height: True
+                    orientation: "vertical"
+                    padding: [dp(10),dp(10),dp(10),dp(10)]
+                    spacing: dp(10)
+                    MDLabel:
+                        id: form_cut
+                        font_style: "Title"
+                        role: "medium"
+                        text: "Форма сечения:"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        markup: True
+                    MDLabel:
+                        id: area_cut
+                        font_style: "Title"
+                        role: "medium"
+                        text: "Площадь сечения:"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        markup: True
+                    MDLabel:
+                        id: n_points
+                        font_style: "Title"
+                        role: "medium"
+                        text: "Количество рабочих точек в сечении:"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        markup: True
+ 
+                # Spacer:
+
+                MDLabel:
+                    # halign: 'center'
+                    font_style: "Title"
+                    role: "medium"
+                    text: "Коэффициенты пневмометрических трубок"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+
+                MDBoxLayout:
+                    # theme_bg_color:"Custom"
+                    # md_bg_color: 0.2, .7, .3, 1
+                    adaptive_height: True
+                    orientation: "vertical"
+                    padding: [dp(10),dp(10),dp(10),dp(10)]
+                    spacing: dp(20)
+                    MDTextField:
+                        id: contr_tube
+                        #size_hint_x: None  # Disable automatic width adjustment based on the parent container
+                        #width: root.width / 2
+                        #size_hint_y: None  # Отключаем автоматический расчет высоты
+                        #height: root.height/20
+                        text: "0"
+                        MDTextFieldHintText:
+                            text: "Контрольная трубка"
+                    
+                    MDTextField:
+                        id: work_tube
+                        #size_hint_x: None  # Disable automatic width adjustment based on the parent container
+                        #width: root.width / 2
+                        text: "0"
+                        MDTextFieldHintText:
+                            text: "Рабочая трубка"
+
+                # Spacer:
+
+                MDLabel:
+                    font_style: "Title"
+                    role: "medium"
+                    text: "Параметры состояния газа"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+
+                MDBoxLayout:
+                    adaptive_height: True
+                    orientation: "vertical"
+                    padding: [dp(10),dp(10),dp(10),dp(10)]
+                    spacing: dp(10)
+                    MDTextField:
+                        id: temp_gas
+                        #size_hint_x: None  # Disable automatic width adjustment based on the parent container
+                        #width: root.width / 2
+                        text: "0"
+                        MDTextFieldHintText:
+                            text: "Средняя температура газа, \u00B0C"
+                    
+                    Spacer: 
+                    MDLabel:
+                        font_style: "Title"
+                        role: "medium"
+                        text: "Плотность сухого газа (н.у.)"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    
+                    MDBoxLayout:
+                        adaptive_height: True
+                        orientation: "horizontal"
+                        padding: [dp(10),dp(10),dp(10),dp(10)]
+                        spacing: dp(10)
+
+                        MDCheckbox:
+                            id: dry_gas1
+                            group: 'group1'
+                            active: True
+                            pos_hint: {'center_x': .1, "center_y": .5}
+                            on_active: root.on_checkbox_active1(0)
+                        MDLabel:
+                            text: "[color=#FFA5A0]Атмосферный воздух[/color]   [b]р=[color=#FFA500]  1.293 [/color][/b] кг/м³"
+                            font_style: "Label"
+                            role: "medium"
+                            markup: True
+
+                    MDBoxLayout:
+                        adaptive_height: True
+                        orientation: "horizontal"
+                        padding: [dp(10),dp(10),dp(10),dp(10)]
+                        spacing: dp(10)
+
+                        MDCheckbox:
+                            id: dry_gas2
+                            group: 'group1'
+                            active: True
+                            pos_hint: {'center_x': .1, "center_y": .5}
+                            on_active: root.on_checkbox_active1(1)
+                        MDTextField:
+                            id: p_dry_gas
+                            #size_hint_x: None  # Disable automatic width adjustment based on the parent container
+                            #width: root.width / 2
+                            text: "0"
+                            MDTextFieldHintText:
+                                text: "Введите значение p, кг/м³"
+
+                    MDBoxLayout:
+                        # theme_bg_color:"Custom"
+                        # md_bg_color: 0.5, .5, .3, 1
+                        adaptive_height: True
+                        orientation: "horizontal"
+                        padding: [dp(10),dp(10),dp(10),dp(10)]
+                        spacing: dp(10)
+
+                        MDCheckbox:
+                            id: dry_gas3
+                            group: 'group1'
+                            active: True
+                            #pos_hint: {'center_x': .1, "center_y": .4}
+                            on_active: root.on_checkbox_active1(2)
+                        MDLabel:
+                            text: "[color=#FFA5A0]На основании расчета [/color]"
+                            font_style: "Label"
+                            role: "medium"
+                            markup: True
+                    
+                    #-----------------------------------------        
+                    MDLabel:
+                        font_style: "Title"
+                        role: "medium"
+                        text: "Характеристики влажного газа (н.у.)"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    
+                    MDBoxLayout:
+                        adaptive_height: True
+                        orientation: "horizontal"
+                        padding: [dp(10),dp(10),dp(10),dp(10)]
+                        spacing: dp(10)
+
+                        MDCheckbox:
+                            id: wet_gas1
+                            group: 'group2'
+                            active: True
+                            pos_hint: {'center_x': .1, "center_y": .5}
+                            on_active: root.on_checkbox_active2(0)
+                        MDLabel:
+                            text: "[color=#FFA5A0]Сухой газ[/color]   [b]f=[color=#FFA500]  0 [/color][/b] г/м³"
+                            font_style: "Label"
+                            role: "medium"
+                            markup: True
+
+                    MDBoxLayout:
+                        adaptive_height: True
+                        orientation: "horizontal"
+                        padding: [dp(10),dp(10),dp(10),dp(10)]
+                        spacing: dp(10)
+
+                        MDCheckbox:
+                            id: wet_gas2
+                            group: 'group2'
+                            active: True
+                            pos_hint: {'center_x': .1, "center_y": .5}
+                            on_active: root.on_checkbox_active2(1)
+
+                        MDTextField:
+                            id: f_wet_gas
+                            #size_hint_x: None  # Disable automatic width adjustment based on the parent container
+                            #width: root.width / 2
+                            text: "0"
+                            MDTextFieldHintText:
+                                text: "Введите значение f, г/м³"
+
+                    MDBoxLayout:
+                        # theme_bg_color:"Custom"
+                        # md_bg_color: 0.5, .5, .3, 1
+                        adaptive_height: True
+                        orientation: "horizontal"
+                        padding: [dp(10),dp(10),dp(10),dp(10)]
+                        spacing: dp(10)
+
+                        MDCheckbox:
+                            id: wet_gas3
+                            group: 'group2'
+                            active: True
+                            #pos_hint: {'center_x': .1, "center_y": .4}
+                            on_active: root.on_checkbox_active2(2)
+                        MDLabel:
+                            text: "[color=#FFA5A0]На основании расчета[/color]"
+                            font_style: "Label"
+                            role: "medium"
+                            markup: True
+
+                MDBoxLayout:
+                    # theme_bg_color:"Custom"
+                    # md_bg_color: 0.5, .5, .3, 1
+                    adaptive_height: True
+                    orientation: "horizontal"
+                    # padding: [dp(25),dp(10),dp(10),dp(25)]
+                    # spacing: dp(20)
+                    Widget:
+                    MDButton:
+                        theme_bg_color:"Custom"
+                        md_bg_color: 0.5, .5, .8, 1
+                        on_release: root.show_alert_dialog()
+                        style: "outlined"
+                        MDButtonText:
+                            theme_text_color: "Custom"
+                            text: "Сохранить" 
+                            text_color: "white"
+                    Widget:
+  
+
+                Spacer: 
+                
+
+                #MDBoxLayout:
+                #    #md_bg_color: "blue"
+                #    id: selection_widget
+                #    orientation: "vertical"
+                
+            
+                #MDBoxLayout:                  
+#-------------------------------------------------------------------------------------------------            
+        MDTopAppBar:
+            id: appbar_custom
+            type: "small"  
+            padding:[dp(15),dp(15),dp(15),dp(35)]
+            #spacing:dp(25)
+                
+            MDTopAppBarLeadingButtonContainer:
+
+                MDActionTopAppBarButton:
+                    icon: "menu"
+                    theme_icon_color: "Custom"
+                    icon_color: "green"
+                    on_release: app.open_left_menu(self, 1)
+
+            MDTopAppBarTitle:
+                id: proba_name_bar
+                pos_hint: {"center_x": .5, "center_y": .5}
+                text: " "
+                theme_text_color: "Custom"
+                text_color: "green"
+
+            
+                
+<Check1@MDCheckbox>:
+    group: 'group'
+    size_hint: None, None
+    size: dp(48), dp(48)
+
+    
+                

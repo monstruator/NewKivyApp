@@ -10,6 +10,8 @@ from kivymd.uix.dialog import (
     MDDialogSupportingText,
     MDDialogButtonContainer,
 )
+from kivy.utils import platform
+from kivymd.app import MDApp
 
 class MeasRecordScreen(MDScreen):
     dialog = None
@@ -19,6 +21,7 @@ class MeasRecordScreen(MDScreen):
     current_record = None
     current_meas = None
     id = None
+    n_points = 0
 
     def update_meas(self):
         print("update_meas")
@@ -48,16 +51,24 @@ class MeasRecordScreen(MDScreen):
                     p1 = float(self.ids.p1.text)
                     p2 = float(self.ids.p2.text)
                     p3 = float(self.ids.p3.text)
-                    p4 = float(self.ids.p4.text)
-                    p5 = float(self.ids.p5.text)
-                    measurement_details = (p1, p2, p3, p4, p5)
+                    p4 = 0 #float(self.ids.p4.text)
+                    p5 = 0 #float(self.ids.p5.text)
+                    n_point = int(self.ids.n_point.text)
+                    in_calc = self.ids.in_calc.active
+                    measurement_details = (measures[self.current_meas][0], p1, p2, p3, p4, p5, n_point, in_calc)
+                    if n_point > self.n_points:
+                        MDDialog(
+                            MDDialogHeadlineText(text="Ошибка ввода номера рабочей точки",),
+                            MDDialogSupportingText(text="Номер рабочей точки не может превышать общего количества рабочих точек",),
+                        ).open()
+                        return
                 except:
                     MDDialog(
                         MDDialogHeadlineText(text="Ошибка сохранения измерения",),
                         MDDialogSupportingText(text="Введены неправильные числовые значения. Убедитесь, что вещественные числа введены в формате ХХХ.ХХХ",),
                     ).open()
                     return     
-                if update_measurement(measures[self.current_meas][0], self.id, measurement_details):
+                if update_measurement(self.id, measurement_details):
                     MDDialog(
                         MDDialogHeadlineText(text="Изменение измерения",),
                         MDDialogSupportingText(text="Успешно",),
@@ -104,16 +115,20 @@ class MeasRecordScreen(MDScreen):
                         self.ids.p1.text = str(measures[self.current_meas][2])
                         self.ids.p2.text = str(measures[self.current_meas][3])
                         self.ids.p3.text = str(measures[self.current_meas][4])
-                        self.ids.p4.text = str(measures[self.current_meas][5])
-                        self.ids.p5.text = str(measures[self.current_meas][6])
+                        # self.ids.p4.text = str(measures[self.current_meas][5])
+                        # self.ids.p5.text = str(measures[self.current_meas][6])
+                        self.ids.n_point.text = str(measures[self.current_meas][7])
+                        self.ids.in_calc.active = measures[self.current_meas][8]
                     else:
                         self.ids.total_meas.text = "0"
                         self.ids.n_record.text = "0"
                         self.ids.p1.text = "0"
                         self.ids.p2.text = "0"
                         self.ids.p3.text = "0"
-                        self.ids.p4.text = "0"
-                        self.ids.p5.text = "0"
+                        # self.ids.p4.text = "0"
+                        # self.ids.p5.text = "0"
+                        self.ids.n_point.text = "0"
+                        self.ids.in_calc.active = False
                 else:
                     MDDialog(
                         MDDialogHeadlineText(text="Удаление измерения",),
@@ -128,8 +143,10 @@ class MeasRecordScreen(MDScreen):
             self.ids.p1.text = str(measures[self.current_meas][2])
             self.ids.p2.text = str(measures[self.current_meas][3])
             self.ids.p3.text = str(measures[self.current_meas][4])
-            self.ids.p4.text = str(measures[self.current_meas][5])
-            self.ids.p5.text = str(measures[self.current_meas][6])
+            # self.ids.p4.text = str(measures[self.current_meas][5])
+            # self.ids.p5.text = str(measures[self.current_meas][6])
+            self.ids.n_point.text = str(measures[self.current_meas][7])
+            self.ids.in_calc.active = measures[self.current_meas][8]
 
     def prev_meas(self):
         measures = fetch_records_by_record_id(self.id)
@@ -139,19 +156,30 @@ class MeasRecordScreen(MDScreen):
             self.ids.p1.text = str(measures[self.current_meas][2])
             self.ids.p2.text = str(measures[self.current_meas][3])
             self.ids.p3.text = str(measures[self.current_meas][4])
-            self.ids.p4.text = str(measures[self.current_meas][5])
-            self.ids.p5.text = str(measures[self.current_meas][6])
+            # self.ids.p4.text = str(measures[self.current_meas][5])
+            # self.ids.p5.text = str(measures[self.current_meas][6])
+            self.ids.n_point.text = str(measures[self.current_meas][7])
+            self.ids.in_calc.active = measures[self.current_meas][8]
 
     def new_meas(self):
-        print("New meas")
+        print("New meas", self.ids.in_calc.active)
         p1 = p2 = p3 = p4 = p5 = 0
         try:
             p1 = float(self.ids.p1n.text)
             p2 = float(self.ids.p2n.text)
             p3 = float(self.ids.p3n.text)
-            p4 = float(self.ids.p4n.text)
-            p5 = float(self.ids.p5n.text)
-            measurement_details = (p1, p2, p3, p4, p5)
+            p4 = 0 #float(self.ids.p4n.text)
+            p5 = 0 #float(self.ids.p5n.text)
+            n_point = int(self.ids.n_point_n.text)
+            in_calc = self.ids.in_calc_n.active
+            measurement_details = (measures[self.current_meas][0], p1, p2, p3, p4, p5, n_point, in_calc)
+            if n_point > self.n_points:
+                MDDialog(
+                    MDDialogHeadlineText(text="Ошибка ввода номера рабочей точки",),
+                    MDDialogSupportingText(text="Номер рабочей точки не может превышать общего количества рабочих точек",),
+                ).open()
+                return
+
         except:
             MDDialog(
                 MDDialogHeadlineText(text="Ошибка сохранения измерения",),
@@ -173,8 +201,10 @@ class MeasRecordScreen(MDScreen):
                         self.ids.p1.text = str(measures[0][2])
                         self.ids.p2.text = str(measures[0][3])
                         self.ids.p3.text = str(measures[0][4])
-                        self.ids.p4.text = str(measures[0][5])
-                        self.ids.p5.text = str(measures[0][6])
+                        # self.ids.p4.text = str(measures[0][5])
+                        # self.ids.p5.text = str(measures[0][6])
+                        self.ids.n_point.text = str(measures[0][7])
+                        self.ids.in_calc.active = measures[0][8]
                 else:
                     MDDialog(
                         MDDialogHeadlineText(text="Добавление измерения",),
@@ -182,9 +212,17 @@ class MeasRecordScreen(MDScreen):
                     ).open()
 
     def on_enter(self):
+        self.screen_width = MDApp.get_running_app().root.width
+        self.screen_height = MDApp.get_running_app().root.height
+        if platform == 'android':
+            self.ids.custom_widget_box.height = self.screen_height*2
+        else:
+            self.ids.custom_widget_box.height = self.screen_height*0.6
+
         name =  App.get_running_app().current_record
         current_record = search_record(name)
         self.id = current_record[0]
+        self.n_points = current_record[17]
         self.ids.proba_name_bar.text = current_record[1]
         print("Edit meas for item:",current_record) 
         measures = fetch_records_by_record_id(self.id)
@@ -196,14 +234,18 @@ class MeasRecordScreen(MDScreen):
             self.ids.p1.text = str(measures[0][2])
             self.ids.p2.text = str(measures[0][3])
             self.ids.p3.text = str(measures[0][4])
-            self.ids.p4.text = str(measures[0][5])
-            self.ids.p5.text = str(measures[0][6])
+            self.ids.n_point.text = str(measures[0][7])
+            self.ids.in_calc.active = measures[0][8]
+            # self.ids.p4.text = str(measures[0][5])
+            # self.ids.p5.text = str(measures[0][6])
         else:
             self.ids.total_meas.text = "0"
             self.ids.n_record.text = "0"
             self.ids.p1.text = "0"
             self.ids.p2.text = "0"
             self.ids.p3.text = "0"
-            self.ids.p4.text = "0"
-            self.ids.p5.text = "0"
+            # self.ids.p4.text = "0"
+            # self.ids.p5.text = "0"
+            self.ids.n_point.text = "0"
+            self.ids.in_calc.active = False
 
