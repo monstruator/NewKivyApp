@@ -55,7 +55,7 @@ class MeasRecordScreen(MDScreen):
                     p5 = 0 #float(self.ids.p5.text)
                     n_point = int(self.ids.n_point.text)
                     in_calc = self.ids.in_calc.active
-                    measurement_details = (measures[self.current_meas][0], p1, p2, p3, p4, p5, n_point, in_calc)
+                    measurement_details = (p1, p2, p3, p4, p5, n_point, in_calc)
                     if n_point > self.n_points:
                         MDDialog(
                             MDDialogHeadlineText(text="Ошибка ввода номера рабочей точки",),
@@ -162,7 +162,7 @@ class MeasRecordScreen(MDScreen):
             self.ids.in_calc.active = measures[self.current_meas][8]
 
     def new_meas(self):
-        print("New meas", self.ids.in_calc.active)
+        print("New meas", self.ids.in_calc_n.active)
         p1 = p2 = p3 = p4 = p5 = 0
         try:
             p1 = float(self.ids.p1n.text)
@@ -172,14 +172,13 @@ class MeasRecordScreen(MDScreen):
             p5 = 0 #float(self.ids.p5n.text)
             n_point = int(self.ids.n_point_n.text)
             in_calc = self.ids.in_calc_n.active
-            measurement_details = (measures[self.current_meas][0], p1, p2, p3, p4, p5, n_point, in_calc)
+            measurement_details = (p1, p2, p3, p4, p5, n_point, in_calc)
             if n_point > self.n_points:
                 MDDialog(
                     MDDialogHeadlineText(text="Ошибка ввода номера рабочей точки",),
                     MDDialogSupportingText(text="Номер рабочей точки не может превышать общего количества рабочих точек",),
                 ).open()
                 return
-
         except:
             MDDialog(
                 MDDialogHeadlineText(text="Ошибка сохранения измерения",),

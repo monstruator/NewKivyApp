@@ -82,6 +82,8 @@ class EnterDataScreen(MDScreen):
 
         self.ids.p_dry_gas.text = "{:.3f}".format(self.current_record[21])
         self.ids.f_wet_gas.text = "{:.3f}".format(self.current_record[22])
+        self.ids.p_dry_calc.text = "[color=#FFA5A0]На основании расчета[/color] p= [b][color=#FFA5A0]{:.3f}[/color][/b]  кг/м³".format(self.current_record[25])
+        self.ids.f_wet_calc.text = "[color=#FFA5A0]На основании расчета[/color] p= [b][color=#FFA5A0]{:.3f}[/color][/b]  г/м³".format(self.current_record[26])
     
         if self.current_record[23] == 0:
             self.ids.dry_gas1.active = True
@@ -134,12 +136,16 @@ class EnterDataScreen(MDScreen):
         if not self.check_box_choise1 == checkbox:
             self.current_record[23] = checkbox
             self.check_box_choise1 = checkbox
+            # print(self.current_record[23])
+            # self.update_record()
     
     def on_checkbox_active2(self, checkbox):
         if not self.check_box_choise1 == checkbox:
             self.current_record[24] = checkbox
             self.check_box_choise1 = checkbox
-                
+            # print(self.current_record[24])
+            # self.update_record()
+
     def update_record(self):
         (record_id, name, descr, count, pressure, temp, hum, is_active, date, time_start, time_end, length, form, diameter, min_side, max_side, double_quantity, n_points, contr_tube, work_tube, temp_gas, p_dry_gas, f_wet_gas, p_choise, f_choise, p_dry_calc, f_wet_calc) =  self.current_record
         update_record(record_id, name, descr, count, pressure, temp, hum, is_active, date, time_start, time_end, length, form, diameter, min_side, max_side, double_quantity, n_points, contr_tube, work_tube, temp_gas, p_dry_gas, f_wet_gas, p_choise, f_choise, p_dry_calc, f_wet_calc)

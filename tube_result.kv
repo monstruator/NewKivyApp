@@ -1,5 +1,5 @@
-<SectionScreen>
-    name: "obj_record"
+<TubeScreen>
+    name: "tube_screen"
     md_bg_color: self.theme_cls.primaryContainerColor
     text_date: ""
     text_time1: ""
@@ -17,20 +17,25 @@
             type: "small" 
             theme_bg_color:"Custom"
             md_bg_color: 0.2, .3, .3, 1
-            padding: "24dp"
+            # padding: "24dp"
+            # spacing: dp(25)
             MDTopAppBarTitle:
-                text: "Рабочее сечение и точки"
+                text: "По ГОСТ 17.2.4.06-90"
                 text_color: "white"
-                #pos_hint: {"center_x": .5}
-                font_style: "Headline"
-                role: "small"
+                pos_hint: {"center_x": .5}
+                font_style: "Title"
+                role: "large"
 
-            MDTopAppBarTrailingButtonContainer:    
+            MDTopAppBarTrailingButtonContainer:
                 MDActionTopAppBarButton:
+                    theme_bg_color:"Custom"
+                    md_bg_color: 0.2, .7, .3, 1
                     icon: "arrow-left"
                     theme_icon_color: "Custom"
                     icon_color: "white"
-                    on_release: app.go_to_obj()
+                    on_release: app.go_to_result()
+                    
+            Widget:
         
         ScrollView:
             MDGridLayout:
@@ -44,30 +49,24 @@
 
                 Spacer:
 
-                MDTextField:
-                    id: part_len
-                    size_hint_x: None  # Disable automatic width adjustment based on the parent container
-                    width: root.width / 2
-                    #size_hint_x: .4
-                    
-                    text: "0"
-                    #pos_hint: { "center_y": .5}
-                    MDTextFieldHintText:
-                        text: "Длина линейного участка, м"
-            
-                Spacer:
+                
                 Spacer:
 
-                MDLabel:
-                #size_hint_x: .1
+                MDBoxLayout:
                     adaptive_height: True
-                    font_style: "Title"
-                    role: "medium"
-                    text: "Форма сечения"
-                    #pos_hint: {'center_x': .8, "center_y": .8}
+                    orientation: "vertical"
+                    spacing: "10dp"
+
+                    MDLabel:
+                        halign: 'center'
+                        font_style: "Title"
+                        role: "medium"
+                        text: "Выбор способа расчета"
+                        size_hint_y: None
+                        height: self.texture_size[1]
 
                 MDBoxLayout: 
-                    #md_bg_color: "red"
+                    md_bg_color: "red"
                     adaptive_height: True
                     #pos_hint: {'center_x': .1, "center_y": .5}
                     #size_hint_x: .6
@@ -81,7 +80,7 @@
                         #pos_hint: {'center_x': .1, "center_y": .4}
                         on_active: root.on_checkbox_active(0)
                     MDLabel:
-                        text: "Круглая"
+                        text: "По ГОСТ 17.2.4.06-90"
                         font_style: "Label"
                         role: "medium"
                         #pos_hint: {'center_x': .8, "center_y": .4}
@@ -93,42 +92,21 @@
                         #pos_hint: {'center_x': .1, "center_y": .4}
                         on_active: root.on_checkbox_active(1)
                     MDLabel:
-                        text: "Прямоугольная"
+                        text: "Без контрольной трубки"
                         font_style: "Label"
                         role: "medium"
                         #pos_hint: {'center_x': .2, "center_y": .4}
 
 
                 Spacer: 
-
-                MDBoxLayout:
-                    spacing: "44dp"
-                    adaptive_height: True
-                    MDLabel:
-                        text:"Удвоить число точек "
-                        font_style:"Title"
-                        role:"medium"
-                        #size_hint_x: 0.8
-                        
-                    MDSwitch:
-                        id: double_poins_id
-                        pos_hint: {"center_x": .5, "center_y": .5}
-                        on_active: root.double_points_switch(*args)   
-
                 Spacer: 
-                Spacer:
-                Spacer:
                 Spacer: 
-                Spacer:
-                Spacer:
 
-                #MDBoxLayout:
-                #    #md_bg_color: "blue"
-                #    id: selection_widget
-                #    orientation: "vertical"
                 
-            
-                #MDBoxLayout:                  
+                    
+
+                Spacer: 
+                    
 #-------------------------------------------------------------------------------------------------            
         MDTopAppBar:
             id: appbar_custom

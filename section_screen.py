@@ -1,25 +1,25 @@
 from kaki.app import App 
 from kivymd.app import MDApp
 from kivy.uix.widget import Widget
-from kivymd.uix.button import MDButton, MDButtonText
+# from kivymd.uix.button import MDButton, MDButtonTexte
 from kivymd.uix.screen import MDScreen
 from mydb import *
 from kivymd.uix.label import MDLabel
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.relativelayout import  MDRelativeLayout
-from kivymd.uix.card import MDCard
+# from kivymd.uix.relativelayout import  MDRelativeLayout
+# from kivymd.uix.card import MDCard
 from kivymd.uix.button import MDFabButton
-from kivymd.uix.selectioncontrol import MDSwitch
+# from kivymd.uix.selectioncontrol import MDSwitch
 from kivymd.uix.fitimage import FitImage
-from kivymd.uix.imagelist.imagelist import MDSmartTileImage
+# from kivymd.uix.imagelist.imagelist import MDSmartTileImage
 from kivy.utils import platform
-from kivymd.uix.dialog import (
-    MDDialog,
-    MDDialogIcon,
-    MDDialogHeadlineText,
-    MDDialogSupportingText,
-    MDDialogButtonContainer,
-)
+# from kivymd.uix.dialog import (
+#     MDDialog,
+#     MDDialogIcon,
+#     MDDialogHeadlineText,
+#     MDDialogSupportingText,
+#     MDDialogButtonContainer,
+# )
 from kivymd.uix.textfield import (
     MDTextField,
     MDTextFieldLeadingIcon,
@@ -253,7 +253,7 @@ class SectionScreen(MDScreen):
                 width =  text_field_width
         )
 
-        self.max_side.add_widget(MDTextFieldHintText(text="Большая сторона"))
+        self.max_side.add_widget(MDTextFieldHintText(text="Большая сторона, м"))
         self.selection_widget.add_widget(self.max_side)  
 
         diameter_layout = MDBoxLayout(spacing = "44dp")
@@ -262,7 +262,7 @@ class SectionScreen(MDScreen):
                 size_hint_x=None,
                 width =  text_field_width
         )
-        self.min_side.add_widget(MDTextFieldHintText(text="Меньшая сторона"))
+        self.min_side.add_widget(MDTextFieldHintText(text="Меньшая сторона, м"))
         button = MDFabButton(
             icon =  "calculator",
             style=  "standard",
@@ -377,11 +377,15 @@ class SectionScreen(MDScreen):
             min_side = float(self.min_side.text)
             max_side = float(self.max_side.text)
             if max_side < min_side:
-                self.square_area_id.text = "Площадь сечения: Неверный ввод"
-                self.eqv_diameter_id.text = "Эквивалентный диаметр: : Неверный ввод"
-                self.proportion_id.text = "Отношение линейного участка к эквивалентному диаметру: Неверный ввод"
-                self.proportion_side_id.text = "Отношение сторон: Неверное соотношение"
-                return
+                # self.square_area_id.text = "Площадь сечения: Неверный ввод"
+                # self.eqv_diameter_id.text = "Эквивалентный диаметр: : Неверный ввод"
+                # self.proportion_id.text = "Отношение линейного участка к эквивалентному диаметру: Неверный ввод"
+                # self.proportion_side_id.text = "Отношение сторон: Неверное соотношение"
+                # return
+                self.min_side.text = str(max_side)
+                self.max_side.text = str(min_side)
+                min_side = float(self.min_side.text)
+                max_side = float(self.max_side.text)
             area = max_side * min_side
             #eqv_diameter = 2 * min_side * max_side / (min_side + max_side)
             

@@ -4,18 +4,14 @@ from kivy.metrics import dp
 from kivy.factory import Factory
 from kivy.core.window import Window
 from kivymd.uix.menu import MDDropdownMenu
-# from typing import NoReturn
 import datetime
 from kivymd.app import MDApp
 from kivymd.uix.card import MDCard
 from kivy.properties import StringProperty, ListProperty
 from kivymd.uix.screenmanager import MDScreenManager
-from kivy.uix.widget import Widget
 from kivymd.app import MDApp
-from kivymd.uix.button import MDButton, MDButtonText
 from kivymd.uix.screen import MDScreen
 from kivy.utils import get_color_from_hex
-from kivymd.font_definitions import theme_font_styles
 from kivymd.uix.pickers import MDTimePickerInput, MDTimePickerDialVertical
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.list import  MDListItemSupportingText, MDListItemTertiaryText, MDListItemTrailingIcon, MDListItemHeadlineText
@@ -27,45 +23,25 @@ from meas_record_screen import MeasRecordScreen
 from section_screen import SectionScreen
 from enter_data import EnterDataScreen
 from calc_dry import CalcDryScreen
+from view_result import ResultScreen
+from gost_result import GostScreen
+from tube_result import TubeScreen
 #!!!
 from kivymd.uix.selectioncontrol import MDCheckbox
 from kivy.utils import platform
 
-# from kivymd.uix.textfield import (
-#     MDTextField,
-#     MDTextFieldLeadingIcon,
-#     MDTextFieldHintText,
-#     MDTextFieldHelperText,
-#     MDTextFieldTrailingIcon,
-#     MDTextFieldMaxLengthText,
-# )
-
 from kivymd.uix.dialog import (
     MDDialog,
-    MDDialogIcon,
     MDDialogHeadlineText,
     MDDialogSupportingText,
-    MDDialogButtonContainer,
-    MDDialogContentContainer,
 )
-from kivymd.uix.divider import MDDivider
 from kivymd.uix.list import (
     MDListItem,
-    MDListItemLeadingIcon,
     MDListItemSupportingText,
 )
 import os
 from mydb import *
-import pickle
 
-empty_data = {
-    'int_column': 0,
-    'float_matrix': [
-        # [1.1, 2.2, 3.3, 4.4, 5.5],
-        # [6.6, 7.7, 8.8, 9.9, 10.1],
-        # [11.2, 12.3, 13.4, 14.5, 15.6]
-    ]
-}
 
 class MyCardMD1(MDCard):
     text1 = StringProperty('')
@@ -79,14 +55,6 @@ class MyCardMD1(MDCard):
 
 class MeasCard(RelativeLayout):
     pass
-    # text1 = StringProperty('')
-    # text2 = StringProperty('')
-    # text3 = StringProperty('')
-    # color = ListProperty([0, 1, 1, 1])  # Default color is white
-    # def __init__(self, **kwargs):
-    #     super().__init__(**kwargs)
-    #     if 'color' in kwargs:
-    #         self.color = kwargs['color']
 
 class ManagerScreens(MDScreenManager):
     def __init__(self, **kwargs):
@@ -101,6 +69,9 @@ class ManagerScreens(MDScreenManager):
                 SectionScreen(name='section_screen'),
                 EnterDataScreen(name='enter_data_screen'),
                 CalcDryScreen(name='calc_dry_screen'),
+                ResultScreen(name='view_result'),
+                GostScreen(name='gost_screen'),
+                TubeScreen(name='tube_screen'),
                 #!!!
             ]
         for screen in screens:
@@ -109,7 +80,6 @@ class ManagerScreens(MDScreenManager):
         
 class MyCard(MDCard):
     text = StringProperty()
-
 
 #-------------------------------------------------- ObjRecordScreen ------------------------------------------------
 class ObjRecordScreen(MDScreen):
@@ -125,8 +95,6 @@ class ObjRecordScreen(MDScreen):
         print("Edit item:", )
         current_record = search_record(name)
         self.ids.proba_name_bar.text = current_record[1]
-        # self.card = MeasCard()
-        # self.ids.custom_widget_box.add_widget(self.card)
         self.id = current_record[0]
         self.text_date =  current_record[8]
         self.text_time1 =  current_record[9]
@@ -502,13 +470,8 @@ class NewRecordScreen(MDScreen):
                 MDDialogSupportingText(text=text_err,),
             ).open()
             return
-        # efile_name = self.entered_date.strftime("%d.%m.%Y") + " " + self.entered_time.strftime('%H:%M:%S')
-        # print("save_record ", file_name)
         print(self.text_name, self.text_description, 0, self.presure, self.temp, self.hum, type(self.text_date), self.text_time1, self.text_time2)
         id = insert_record(self.text_name, self.text_description, 0, self.presure, self.temp, self.hum, self.text_date, self.text_time1, self.text_time2)
-        # res = 0
-        # if id:
-        #     res = insert_section_record(id)
         if id == 0:
             MDDialog(
                 MDDialogHeadlineText(text="Ошибка создания записи",),
@@ -577,13 +540,6 @@ class RecordScreen(MDScreen):
             
             App.get_running_app().current_record = list_item.text1
             App.get_running_app().go_to_obj()
-            
-            # app.go_to_folder_recods()
-            # res = update_is_active(text1,0)
-            # if res:
-            #     grid_layout = self.ids.custom_widget_box 
-            #     grid_layout.remove_widget(list_item) 
-
     
 class LoginScreen(MDScreen):
     def __init__(self, **kwargs):
@@ -612,6 +568,10 @@ class Live(App, MDApp):
         os.path.join(os.getcwd(), "section_screen.kv"),
         os.path.join(os.getcwd(), "enter_data.kv"),
         os.path.join(os.getcwd(), "calc_dry.kv"),
+        os.path.join(os.getcwd(), "view_result.kv"),
+        os.path.join(os.getcwd(), "gost_result.kv"),
+        os.path.join(os.getcwd(), "tube_result.kv"),
+
         # os.path.join(os.getcwd(), "manager_screens.kv"),
         #!!!
     }
@@ -626,6 +586,8 @@ class Live(App, MDApp):
         "SectionRecordScreen":"section_screen",
         "EnterDataScreen":"enter_data_screen",
         "CalcDryScreen":"calc_dry_screen", 
+        "ResultScreen":"view_result", 
+        #!!!
     }
     AUTORELOADER_PATHS = [(os.getcwd(), {"recursive": False})]
 
@@ -681,6 +643,9 @@ class Live(App, MDApp):
             self.go_to_enter_data()
         if text_item == left_menu[4]:
             self.go_to_calc_dry()
+        if text_item == left_menu[6]:
+            self.go_to_result()
+        
             
     def go_to_enter_data(self):
         self.manager_screens.current = 'enter_data_screen'
@@ -704,27 +669,36 @@ class Live(App, MDApp):
         self.manager_screens.current = 'login'
         screen2 = self.manager_screens.get_screen('login')
         print(screen2)
-
     def go_to_obj(self):
         self.manager_screens.current = 'obj_record'
-
-    def go_to_meas(self,):
+    def go_to_meas(self):
         self.manager_screens.current = 'meas_record'
-    
-    def go_to_section(self,):
+    def go_to_section(self):
         self.manager_screens.current = 'section_screen'
-
-    def go_to_calc_dry(self,):
+    def go_to_calc_dry(self):
         self.manager_screens.current = 'calc_dry_screen'
+    def go_to_result(self):
+        # for screen_name in self.manager_screens.screen_names:
+        #     print(screen_name)
+        self.manager_screens.current = 'view_result'
+    def go_to_gost(self):
+        self.manager_screens.current = 'gost_screen'
+    def go_to_tube(self):
+        self.manager_screens.current = 'tube_screen'
 
     #!!!
 
     def hook_keyboard(self, window, key, *largs):
+        go_to_obj_scr = ['meas_record', 'view_result', 'section_screen', 'enter_data_record', 'calc_dry_screen']
+        go_to_rec_scr = ['new_record', 'folder_record', 'obj_record']
+        go_to_res_scr = ['gost_screen', 'tube_screen']
         if key == 27:
-            if self.manager_screens.current == 'new_record' or self.manager_screens.current == 'folder_record' or self.manager_screens.current == 'obj_record':
+            if self.manager_screens.current in go_to_rec_scr:
                 self.go_to_recods()
-            if self.manager_screens.current == 'meas_record' or self.manager_screens.current == 'section_screen' or self.manager_screens.current == 'enter_data_record' or self.manager_screens.current == 'calc_dry_screen':
+            if self.manager_screens.current in go_to_obj_scr:
                 self.go_to_obj()
+            if self.manager_screens.current in go_to_res_scr:
+                self.go_to_result()
         return True
 
 

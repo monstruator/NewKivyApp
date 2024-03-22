@@ -31,6 +31,7 @@ def create_table():
                 contr_tube REAL DEFAULT 1,
                 work_tube REAL DEFAULT 1,
                 temp_gas REAL DEFAULT 0,
+                
                 p_dry_gas REAL DEFAULT 0,
                 f_wet_gas REAL DEFAULT 0,
                 
@@ -41,6 +42,7 @@ def create_table():
                 f_wet_calc REAL DEFAULT 0
             );
         '''
+        #0-26
         cursor.execute(create_table_query)
         connection.commit()
 
@@ -61,6 +63,18 @@ def create_table():
         cursor.execute(create_table_query)
         connection.commit()
 
+        create_table_query = '''
+            CREATE TABLE IF NOT EXISTS components (
+                id INTEGER PRIMARY KEY,
+                record_id INTEGER,
+                name TEXT,
+                density REAL,
+                part REAL,
+                FOREIGN KEY(record_id) REFERENCES records(id)
+            )
+        '''
+        cursor.execute(create_table_query)
+        connection.commit()
         # create_table_query = '''
         #     CREATE TABLE IF NOT EXISTS SectionTable (
         #         id INTEGER PRIMARY KEY,
@@ -82,6 +96,45 @@ def create_table():
     except:
         print('Error create table')
 
+def delete_component(record_id, component_id):
+    connection = None
+    try:
+        connection = sqlite3.connect('DB/data.db')
+        cursor = connection.cursor()
+        cursor.execute("""
+            DELETE FROM components
+            WHERE record_id = ? AND id = ?
+        """, (record_id, component_id))
+        connection.commit()
+        print("Component deleted successfully.")
+        return 1
+    except sqlite3.Error as e:
+        print(f"Error deleting component: {e}")
+        return 0
+    finally:
+        if connection:
+            connection.close()
+            
+def add_component(record_id, component_details):
+    connection = None
+    try:
+        connection = sqlite3.connect('DB/data.db')
+        cursor = connection.cursor()
+        cursor.execute("""
+            INSERT INTO components (record_id, name, density, part)
+            VALUES (?, ?, ?, ?)
+        """, (record_id,) + tuple(component_details))
+        connection.commit()
+        print("Components added successfully to existing record.")
+        if connection:
+            connection.close()
+        return 1
+    except sqlite3.Error as e:
+        print(f"Error adding components to existing record: {e}")
+        if connection:
+            connection.close()
+        return 0
+    
 def insert_record(name, descr, count, presure, temp, hum, date, time_start, time_end):
     try:
         connection = sqlite3.connect('DB/data.db')
@@ -128,7 +181,7 @@ def update_measurement(id, measurement_details):
         cursor = connection.cursor()
         cursor.execute("""
             UPDATE MeasurTable
-            SET record_id=?, p1=?, p2=?, p3=?, p4=?, p5=?, n_point=?, in_calc=?
+            SET p1=?, p2=?, p3=?, p4=?, p5=?, n_point=?, in_calc=?
             WHERE id=?
         """, tuple(measurement_details) + (id,))
         connection.commit()
@@ -141,27 +194,7 @@ def update_measurement(id, measurement_details):
         if connection:
             connection.close()
         return 0    
-    
-# def update_measurement(id, record_id, measurement_details):
-#     connection = None
-#     try:
-#         connection = sqlite3.connect('DB/data.db')
-#         cursor = connection.cursor()
-#         cursor.execute("""
-#             UPDATE MeasurTable
-#             SET p1=?, p2=?, p3=?, p4=?, p5=?, n_point=?, in_calc=?
-#             WHERE id=? AND record_id=?
-#         """, tuple(measurement_details) + (id, record_id))
-#         connection.commit()
-#         print("Measurement updated successfully.")
-#         if connection:
-#             connection.close()
-#         return 1
-#     except sqlite3.Error as e:
-#         print(f"Error updating measurement: {e}")
-#         if connection:
-#             connection.close()
-#         return 0    
+
         
 def delete_measurement(id, record_id):
     connection = None
@@ -283,36 +316,6 @@ def update_record(record_id, name, descr, count, pressure, temp, hum, is_active,
     except sqlite3.Error as e:
         print("Error updating record:", e)
 
-    
-# def update_record(id, name, descr, count, presure, temp, hum, date, time_start, time_end,):
-#     try:
-#         connection = sqlite3.connect('DB/data.db')
-#         cursor = connection.cursor()
-#         cursor.execute("""
-#             UPDATE records
-#             SET name = ?,
-#                 descr = ?,
-#                 count = ?,
-#                 presure = ?,
-#                 temp = ?,
-#                 hum = ?,
-#                 date = ?,
-#                 time_start = ?,
-#                 time_end = ?
-#             WHERE id = ?
-#         """, (name, descr, count, presure, temp, hum, date, time_start, time_end, id))
-#         connection.commit()
-
-#         if cursor.rowcount == 0:
-#             print("No record found with the specified ID.")
-#         else:
-#             print("Record updated successfully!")
-
-#     except sqlite3.Error as e:
-#         print(f"Error updating record: {e}")
-#     finally:
-#         connection.close()
-
 def fetch_records_by_record_id(record_id):
     conn = sqlite3.connect('DB/data.db')
     cur = conn.cursor()
@@ -327,48 +330,16 @@ def fetch_records_by_record_id(record_id):
     finally:
         conn.close()
 
+def fetch_components_by_record_id(record_id):
+    conn = sqlite3.connect('DB/data.db')
+    cur = conn.cursor()
 
-# def insert_section_record(record_id, length=0, form=0, diameter=0, min_side=0, max_side=0, double_quantity=0):
-#     try:
-#         connection = sqlite3.connect('DB/data.db')
-#         cursor = connection.cursor()
-#         cursor.execute("""
-#             INSERT INTO SectionTable (record_id, length, form, diameter, min_side, max_side, double_quantity)
-#             VALUES (?, ?, ?, ?, ?, ?, ?)
-#         """, (record_id, length, form, diameter, min_side, max_side, double_quantity))
-#         connection.commit()
-#         print("Record added successfully to SectionTable.")
-#         if connection:
-#             connection.close()
-#         return 1
-#     except sqlite3.Error as e:
-#         print(f"Error adding record to SectionTable: {e}")
-#         if connection:
-#             connection.close()
-#         return 0
-        
-# def fetch_section(record_id):
-#     conn = sqlite3.connect('DB/data.db')
-#     cur = conn.cursor()
-#     try:
-#         cur.execute("SELECT * FROM MeasurTable WHERE record_id = ?", (record_id,))
-#         records = cur.fetchall()
-#         return records
-#     except sqlite3.Error as e:
-#         print(f"An error occurred: {e}")
-#         return []
-#     finally:
-#         conn.close()
-
-# def insert_data(name, count, filename):
-#     try:
-#         connection = sqlite3.connect('DB/data.db')
-#         cursor = connection.cursor()
-#         cursor.execute("INSERT INTO records (name, count, file_name, is_active) VALUES (?, ?, ?, ?)", (name, count, filename, 1))
-#         connection.commit()
-#         connection.close()
-#         print("Record added")
-#         return 1
-#     except:
-#         print('Error add record')
-#         return 0
+    try:
+        cur.execute("SELECT * FROM components WHERE record_id = ?", (record_id,))
+        records = cur.fetchall()
+        return records
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")
+        return []
+    finally:
+        conn.close()
