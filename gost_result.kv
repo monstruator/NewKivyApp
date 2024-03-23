@@ -1,14 +1,6 @@
 <GostScreen>
-    name: "gost_screen"
+    record_name : "None"
     md_bg_color: self.theme_cls.primaryContainerColor
-    text_date: ""
-    text_time1: ""
-    text_time2: ""
-    text_name: ""
-    text_description: ""
-    text_temp: ""
-    text_presure: ""
-    text_hum: ""
 
     MDBoxLayout:
         orientation: "vertical"
@@ -53,7 +45,7 @@
                 cols:1
                 #height: self.minimum_height
                 padding:[dp(15),dp(15),dp(15),dp(25)]
-                spacing:dp(45)
+                spacing:dp(35)
                 #height: "2000dp" 
 
 
@@ -101,12 +93,12 @@
                     text1: "Объемный расход сухого газа в рабочих условиях газохода"  
                 SuperBox:
                     id: box11
-                    text1: "Объемный расход сухого газа в нормальных условиях (101.3 кПа и 0 \u00B0C;)"      
+                    text1: "Объемный расход сухого газа в нормальных условиях (101.3 кПа и 0 \u00B0C;)" 
 
-                Spacer: 
-                Spacer: 
-                Spacer: 
+                TitleBox:
+                    text1:"[b]Скоростные параметры по точкам[/b]"     
 
+                
 #-------------------------------------------------------------------------------------------------            
         
         MDBoxLayout:
@@ -132,6 +124,13 @@
                 icon_color: "white"
                 pos_hint: {"center_y": .5}
                 on_release: app.open_left_menu(self, 1)
+            
+            MDBoxLayout:
+                MDLabel:
+                    text: root.record_name
+                    text_color: "white"
+                    valign: "center"
+                    halign: "center"
             
                 
 <Spacer@Widget>

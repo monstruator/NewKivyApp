@@ -68,7 +68,7 @@ class MeasRecordScreen(MDScreen):
                         MDDialogSupportingText(text="Введены неправильные числовые значения. Убедитесь, что вещественные числа введены в формате ХХХ.ХХХ",),
                     ).open()
                     return     
-                if update_measurement(self.id, measurement_details):
+                if update_measurement(measures[self.current_meas][0], measurement_details):
                     MDDialog(
                         MDDialogHeadlineText(text="Изменение измерения",),
                         MDDialogSupportingText(text="Успешно",),
@@ -213,16 +213,17 @@ class MeasRecordScreen(MDScreen):
     def on_enter(self):
         self.screen_width = MDApp.get_running_app().root.width
         self.screen_height = MDApp.get_running_app().root.height
-        if platform == 'android':
-            self.ids.custom_widget_box.height = self.screen_height*2
-        else:
-            self.ids.custom_widget_box.height = self.screen_height*0.6
+        # if platform == 'android':
+        #     self.ids.custom_widget_box.height = self.screen_height*2
+        # else:
+        #     self.ids.custom_widget_box.height = self.screen_height*0.6
 
         name =  App.get_running_app().current_record
         current_record = search_record(name)
         self.id = current_record[0]
         self.n_points = current_record[17]
-        self.ids.proba_name_bar.text = current_record[1]
+        # self.ids.proba_name_bar.text = current_record[1]
+        self.record_name = name
         print("Edit meas for item:",current_record) 
         measures = fetch_records_by_record_id(self.id)
         if measures:

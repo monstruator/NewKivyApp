@@ -26,6 +26,7 @@ from calc_dry import CalcDryScreen
 from view_result import ResultScreen
 from gost_result import GostScreen
 from tube_result import TubeScreen
+from bt_screen import   BtScreen
 #!!!
 from kivymd.uix.selectioncontrol import MDCheckbox
 from kivy.utils import platform
@@ -72,6 +73,7 @@ class ManagerScreens(MDScreenManager):
                 ResultScreen(name='view_result'),
                 GostScreen(name='gost_screen'),
                 TubeScreen(name='tube_screen'),
+                BtScreen(name='bt_screen'),
                 #!!!
             ]
         for screen in screens:
@@ -109,11 +111,14 @@ class ObjRecordScreen(MDScreen):
         self.ids.temp_field.text = str(current_record[5])
         self.hum = current_record[6]
         self.ids.hum_field.text = str(current_record[6])
+        self.ids.total_points.text = "Всего рабочих точек: " + str(current_record[17])
+
         measures = fetch_records_by_record_id(self.id)
         if measures:
             self.ids.total_meas.text = "Всего измерений: " + str(len(measures))
         else:
             self.ids.total_meas.text = "Всего измерений: 0"
+        
 
     def open_date_picker(self, focus):
         if not focus:
@@ -571,7 +576,7 @@ class Live(App, MDApp):
         os.path.join(os.getcwd(), "view_result.kv"),
         os.path.join(os.getcwd(), "gost_result.kv"),
         os.path.join(os.getcwd(), "tube_result.kv"),
-
+        os.path.join(os.getcwd(), "bt_screen.kv"),
         # os.path.join(os.getcwd(), "manager_screens.kv"),
         #!!!
     }
@@ -587,6 +592,7 @@ class Live(App, MDApp):
         "EnterDataScreen":"enter_data_screen",
         "CalcDryScreen":"calc_dry_screen", 
         "ResultScreen":"view_result", 
+        "BtScreen":"bt_screen",
         #!!!
     }
     AUTORELOADER_PATHS = [(os.getcwd(), {"recursive": False})]
@@ -678,13 +684,13 @@ class Live(App, MDApp):
     def go_to_calc_dry(self):
         self.manager_screens.current = 'calc_dry_screen'
     def go_to_result(self):
-        # for screen_name in self.manager_screens.screen_names:
-        #     print(screen_name)
         self.manager_screens.current = 'view_result'
     def go_to_gost(self):
         self.manager_screens.current = 'gost_screen'
     def go_to_tube(self):
         self.manager_screens.current = 'tube_screen'
+    def go_to_bt(self):
+        self.manager_screens.current = 'bt_screen'
 
     #!!!
 
@@ -699,6 +705,8 @@ class Live(App, MDApp):
                 self.go_to_obj()
             if self.manager_screens.current in go_to_res_scr:
                 self.go_to_result()
+            if self.manager_screens.current == 'bt_screen':
+                self.go_to_meas()
         return True
 
 

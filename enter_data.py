@@ -414,7 +414,7 @@ class EnterDataScreen(MDScreen):
         meas = measures[int(checkbox.id)]
         meas_list = list(meas)
         meas_list[8] = int(value)
-        measurement = meas_list[1:]
+        measurement = meas_list[2:]
         # print(meas_list, measurement)
         if update_measurement(meas_list[0],measurement):
                     # MDDialog(

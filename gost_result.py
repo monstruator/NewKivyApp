@@ -4,6 +4,11 @@ from kivymd.uix.screen import MDScreen
 from mydb import *
 from kivy.utils import platform
 import math
+from kivymd.uix.list import MDListItem
+from kivymd.uix.label import MDLabel
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivy.utils import get_color_from_hex
+from kivy.uix.widget import Widget
 
 if platform == 'android':
     try:
@@ -25,8 +30,9 @@ class GostScreen(MDScreen):
         self.current_record = list(search_record(name))
         self.id = self.current_record[0]
         measures = fetch_records_by_record_id(self.id)
+        self.record_name = name
 
-        # print(measures)
+        print(self.record_name)
         Pdk = 0
         Ppoln = 0
         Pct = 0
@@ -77,7 +83,8 @@ class GostScreen(MDScreen):
         Pgvlru = Pgvlnu * 273 * (self.current_record[4] + Pct/1000) / (101.3 * (273 + self.current_record[5]))
         self.ids.box7.text2 = f"{Pgvlru:.2f}" + " кг/м³"
 
-        Usr = Alfa * math.sqrt(2*Pdk/Pgvlru)
+        self.var1 = math.sqrt(2*Pdk/Pgvlru)
+        Usr = Alfa * self.var1
         self.ids.box8.text2 = f"{Usr:.2f}" + " м/с"
 
         if self.current_record[12] == 0:
@@ -111,32 +118,98 @@ class GostScreen(MDScreen):
 
             except Exception as e:
                 print('Error get font_scale')
-
         
-        
-        
-
-
-        # self.ids.proba_name_bar.text = self.current_record[1]
-        # self.ids.part_len.text = str(self.current_record[11]) #part_len
-        # print("switch active = ", self.current_record[16])
-        # self.ids.double_poins_id.active = self.current_record[16]
-        # #print("Form1: ",self.current_record[12]) 
-        # # measures = fetch_records_by_record_id(self.id)
-        
-        # if self.current_record[12] == 0:
-        #     self.ids.circle_checkbox.active = True
-        #     self.ids.rectangle_checkbox.active = False
-        #     self.add_circle_main_layout()
-        # else:
-        #     self.ids.circle_checkbox.active = False
-        #     self.ids.rectangle_checkbox.active = True
-        #     self.add_rectangle_main_layout()
+        if len(measures) > 0:
+            for widget in self.ids.custom_widget_box.children[:]:
+                if hasattr(widget, 'id') and widget.id == "table_item":
+                    self.ids.custom_widget_box.remove_widget(widget)
+            self.add_table_title()
+            for el in range(len(measures)):
+                if not self.current_record[18] ==0 and not meas[3] == 0:
+                    self.add_card(el, measures[el])
+    
 
     def on_checkbox_active(self, checkbox):
         if not self.check_box_choise == checkbox:
             self.check_box_choise = checkbox
             print(self.check_box_choise)
                 
-    
+#-----------------------------------------------------------------------------------------------------    
+    def add_table_title(self,):
+        # print("add_title")
+        label_texts = []
+        label_texts.append(f"[color=#000000][b]Точка №[/b][/color]")
+        label_texts.append(f"[color=#003333][b]Скорость (м/с)[/b][/color]")
+        label_texts.append(f"[color=#0000FF][b]α в точке[/b][/color]")
 
+        # list_item = MDListItem()       
+        label_width = self.screen_width / 3.5
+
+        list_item = MDBoxLayout(
+                id = "table_item",
+                # md_bg_color = get_color_from_hex("#C4C4FF"), 
+                adaptive_height=True,
+                # height=30,
+                spacing="2dp", padding="5dp",) 
+    
+        containers = []
+        for text in label_texts:
+            container = MDBoxLayout(
+                # md_bg_color=get_color_from_hex("#F00490"),
+                # theme_bg_color="Custom",
+                size_hint_x=None,
+                adaptive_height=True,
+                width=label_width,  # Adjust the width as needed
+                padding=["5dp", "12dp", "5dp", "12dp"]
+            )
+            label = MDLabel(text=text, markup = True, font_style="Title", role="small", halign='center')  # Adjust the width as needed
+            container.add_widget(label)
+            containers.append(container)
+
+        for el in containers:
+            list_item.add_widget(el)
+        # self.ids.custom_widget_box.height += list_item.height # + self.ids.custom_widget_box.spacing
+
+        self.ids.custom_widget_box.add_widget(list_item)
+#-----------------------------------------------------------------------------------------------------
+    def add_card(self, num_meas, meas):
+        label_texts = []
+        label_texts.append(f"[color=#000000]{str(num_meas+1)}[/color]")
+        
+        Alfa = math.sqrt((meas[2]*self.current_record[19])/(meas[3]*self.current_record[18]))
+        Ut = Alfa * self.var1
+        label_texts.append(f"[color=#003333]{Ut:.2f}[/color]")
+        label_texts.append(f"[color=#0000FF]{Alfa:.2f}[/color]")
+
+        # else:
+        #     label_texts.append(f"[color=#003333]-[/color]")
+        #     label_texts.append(f"[color=#0000FF]-[/color]")
+
+        label_width = self.screen_width / 3.5
+        
+        # list_item = MDListItem()
+        list_item = MDBoxLayout(
+                id = "table_item",
+                md_bg_color = get_color_from_hex("#C4C4FF"), 
+                adaptive_height=True,  
+                spacing="2dp", padding=["0dp", "20dp", "0dp", "20dp"]) 
+
+        
+        containers = []
+        for text in label_texts:
+            container = MDBoxLayout(
+                # md_bg_color=get_color_from_hex("#F00490"),
+                size_hint_x=None,
+                width=label_width,  # Adjust the width as needed
+                # theme_bg_color="Custom",
+                # padding=["15dp", "20dp", "0dp", "20dp"]
+            )
+            label = MDLabel(text=text, markup = True, font_style="Body", role="small", halign='center')  # Adjust the width as needed
+            container.add_widget(label)
+            containers.append(container)
+
+        for el in containers:
+            list_item.add_widget(el)
+            #grid_layout.height += list_item.height + self.selection_widget.spacing
+
+        self.ids.custom_widget_box.add_widget(list_item)

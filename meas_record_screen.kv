@@ -9,6 +9,7 @@
     text_temp: ""
     text_presure: ""
     text_hum: ""
+    record_name: "None"
 
     MDBoxLayout:
         orientation: "vertical"
@@ -252,26 +253,45 @@
             #    size_hint_x: .05    
                           
 #-------------------------------------------------------------------------------------------------            
-        MDTopAppBar:
-            id: appbar_custom
-            type: "small"  
-            padding:[dp(15),dp(15),dp(15),dp(35)]
-            #spacing:dp(25)
-                
-            MDTopAppBarLeadingButtonContainer:
+        MDBoxLayout:
+            id: top1
+            theme_bg_color:"Custom"
+            md_bg_color: 0.2, .3, .3, 1
+            adaptive_height: False
+            size_hint_y: None
+            height: label_top.texture_size[1] + 40
+            orientation: "horizontal"
+            spacing: "10dp"
+            padding:[dp(15),dp(15),dp(15),dp(15)]
 
-                MDActionTopAppBarButton:
-                    icon: "menu"
-                    theme_icon_color: "Custom"
-                    icon_color: "green"
-                    on_release: app.open_left_menu(self, 1)
+            #Widget:
 
-            MDTopAppBarTitle:
-                id: proba_name_bar
-                pos_hint: {"center_x": .5, "center_y": .5}
-                theme_text_color: "Custom"
-                text_color: "green"
+            MDIconButton:
+                icon: "menu"
+                style: "tonal"
+                theme_bg_color: "Custom"
+                md_bg_color: 0.2, .3, .3, 1
+                #md_bg_color: 0.2, .7, .3, 1
+                theme_icon_color: "Custom"
+                icon_color: "white"
+                pos_hint: {"center_y": .5}
+                on_release: app.open_left_menu(self, 1)
+            
+            MDBoxLayout:
+                MDLabel:
+                    id: label_top
+                    text: root.record_name
+                    text_color: "white"
+                    valign: "center"
+                    halign: "center"
 
+            MDFabButton:
+                icon: "bluetooth"
+                style: "standard" 
+                color_map: "tertiary" 
+                theme_bg_color: "Custom"
+                md_bg_color: "blue"   
+                on_release: app.go_to_bt()   
             
                 
 <Spacer@Widget>

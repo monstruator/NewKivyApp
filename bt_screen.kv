@@ -1,0 +1,87 @@
+<BtScreen>
+    record_name : "None"
+    md_bg_color: self.theme_cls.primaryContainerColor
+
+    MDBoxLayout:
+        orientation: "vertical"
+
+        MDBoxLayout:
+            id: top1
+            theme_bg_color:"Custom"
+            md_bg_color: 0.2, .3, .3, 1
+            adaptive_height: False
+            size_hint_y: None
+            height: button_top.texture_size[1] + 40
+            orientation: "horizontal"
+            spacing: "10dp"
+            padding:[dp(15),dp(15),dp(15),dp(15)]
+            
+            MDLabel:
+                id: label_top
+                font_style: "Title"
+                role: "small"    
+                text: "Получить серию"
+                text_color: "white"
+                valign: "center"
+                halign: "center"
+                
+            MDIconButton:
+                icon: "arrow-left"
+                style: "tonal"
+                theme_bg_color: "Custom"
+                md_bg_color: 0.2, .3, .3, 1
+                #md_bg_color: 0.2, .7, .3, 1
+                theme_icon_color: "Custom"
+                icon_color: "white"
+                pos_hint: {"center_y": .5}
+                on_release: app.go_to_meas()
+        
+        
+        ScrollView:
+            MDGridLayout:
+                adaptive_height: True
+                id: custom_widget_box
+                size_hint_y: None
+                cols:1
+                padding:[dp(15),dp(15),dp(15),dp(25)]
+                spacing:dp(35)
+
+                Spacer:
+                TitleBox:
+                    text1:"[b]Список доступных устройств[/b]"
+                
+#-------------------------------------------------------------------------------------------------            
+        
+        MDBoxLayout:
+            id: top1
+            theme_bg_color:"Custom"
+            md_bg_color: 0.2, .3, .3, 1
+            adaptive_height: False
+            size_hint_y: None
+            height: button_top.texture_size[1] + 40
+            orientation: "horizontal"
+            spacing: "10dp"
+            padding:[dp(15),dp(15),dp(15),dp(15)]
+
+            #Widget:
+
+            MDIconButton:
+                id: button_top
+                icon: "menu"
+                style: "tonal"
+                theme_bg_color: "Custom"
+                md_bg_color: 0.2, .3, .3, 1
+                #md_bg_color: 0.2, .7, .3, 1
+                theme_icon_color: "Custom"
+                icon_color: "white"
+                pos_hint: {"center_y": .5}
+                on_release: app.open_left_menu(self, 1)
+            
+            MDBoxLayout:
+                MDLabel:
+                    text: root.record_name
+                    text_color: "white"
+                    valign: "center"
+                    halign: "center"
+            
+                
