@@ -1,143 +1,131 @@
 <TubeScreen>
     name: "tube_screen"
+    record_name : "None"
     md_bg_color: self.theme_cls.primaryContainerColor
-    text_date: ""
-    text_time1: ""
-    text_time2: ""
-    text_name: ""
-    text_description: ""
-    text_temp: ""
-    text_presure: ""
-    text_hum: ""
 
     MDBoxLayout:
         orientation: "vertical"
-        
-        MDTopAppBar:
-            type: "small" 
+
+        MDBoxLayout:
+            id: top1
             theme_bg_color:"Custom"
             md_bg_color: 0.2, .3, .3, 1
-            # padding: "24dp"
-            # spacing: dp(25)
-            MDTopAppBarTitle:
-                text: "По ГОСТ 17.2.4.06-90"
-                text_color: "white"
-                pos_hint: {"center_x": .5}
+            adaptive_height: False
+            size_hint_y: None
+            height: label_top.texture_size[1] + 40
+            orientation: "horizontal"
+            spacing: "10dp"
+            padding:[dp(15),dp(15),dp(15),dp(15)]
+            
+            MDLabel:
+                id: label_top
                 font_style: "Title"
-                role: "large"
-
-            MDTopAppBarTrailingButtonContainer:
-                MDActionTopAppBarButton:
-                    theme_bg_color:"Custom"
-                    md_bg_color: 0.2, .7, .3, 1
-                    icon: "arrow-left"
-                    theme_icon_color: "Custom"
-                    icon_color: "white"
-                    on_release: app.go_to_result()
-                    
-            Widget:
+                role: "small"    
+                text: "Без контрольной трубки"
+                text_color: "white"
+                valign: "center"
+                halign: "center"
+                
+            MDIconButton:
+                icon: "arrow-left"
+                style: "tonal"
+                theme_bg_color: "Custom"
+                md_bg_color: 0.2, .3, .3, 1
+                #md_bg_color: 0.2, .7, .3, 1
+                theme_icon_color: "Custom"
+                icon_color: "white"
+                pos_hint: {"center_y": .5}
+                on_release: app.go_to_result()
+        
         
         ScrollView:
             MDGridLayout:
+                adaptive_height: True
                 id: custom_widget_box
                 size_hint_y: None
                 cols:1
-                #height: self.minimum_height
-                padding:[dp(25),dp(15),dp(15),dp(35)]
-                #spacing:dp(25)
-                height: "3500dp" 
+                padding:[dp(15),dp(15),dp(15),dp(25)]
+                spacing:dp(35)
 
                 Spacer:
-
-                
-                Spacer:
-
-                MDBoxLayout:
-                    adaptive_height: True
-                    orientation: "vertical"
-                    spacing: "10dp"
-
-                    MDLabel:
-                        halign: 'center'
-                        font_style: "Title"
-                        role: "medium"
-                        text: "Выбор способа расчета"
-                        size_hint_y: None
-                        height: self.texture_size[1]
-
-                MDBoxLayout: 
-                    md_bg_color: "red"
-                    adaptive_height: True
-                    #pos_hint: {'center_x': .1, "center_y": .5}
-                    #size_hint_x: .6
-                    padding: "24dp"
-                    spacing: "6dp"
+                TitleBox:
+                    text1:"[b]Давления в газоходе[/b]"
                     
-                    MDCheckbox:
-                        id: circle_checkbox
-                        group: 'group'
-                        active: True
-                        #pos_hint: {'center_x': .1, "center_y": .4}
-                        on_active: root.on_checkbox_active(0)
-                    MDLabel:
-                        text: "По ГОСТ 17.2.4.06-90"
-                        font_style: "Label"
-                        role: "medium"
-                        #pos_hint: {'center_x': .8, "center_y": .4}
-                
-                    MDCheckbox:
-                        id: rectangle_checkbox
-                        group: 'group'
-                        active: True
-                        #pos_hint: {'center_x': .1, "center_y": .4}
-                        on_active: root.on_checkbox_active(1)
-                    MDLabel:
-                        text: "Без контрольной трубки"
-                        font_style: "Label"
-                        role: "medium"
-                        #pos_hint: {'center_x': .2, "center_y": .4}
-
-
-                Spacer: 
-                Spacer: 
-                Spacer: 
-
-                
+                SuperBox:
+                    id: box1
+                    text1: "Динамическое давление в рабочих точках (среднее по скорости)"
+                SuperBox:
+                    id: box2
+                    text1: "Полное давление (среднее по газоходу)"      
+                SuperBox:
+                    id: box3
+                    text1: "Статическое давление (среднее по газоходу)"      
                     
 
-                Spacer: 
-                    
+                TitleBox:
+                    text1:"[b]Плотность газа[/b]"
+
+                SuperBox:
+                    id: box5
+                    text1: "Плотность сухого газа в нормальных условиях (101.3 кПа и 0 \u00B0C;)"      
+                SuperBox:
+                    id: box6
+                    text1: "Плотность влажного газа в нормальных условиях (101.3 кПа и 0 \u00B0C;)"      
+                SuperBox:
+                    id: box7
+                    text1: "Плотность влажного газа в условиях газохода" 
+
+                TitleBox:
+                    text1:"[b]Скорость и расход газа[/b]"
+
+                SuperBox:
+                    id: box8
+                    text1: "Скорость газа (средняя по газоходу)"      
+                SuperBox:
+                    id: box9
+                    text1: "Объемный расход влажного газа в рабочих условиях газохода"      
+                SuperBox:
+                    id: box10
+                    text1: "Объемный расход сухого газа в рабочих условиях газохода"  
+                SuperBox:
+                    id: box11
+                    text1: "Объемный расход сухого газа в нормальных условиях (101.3 кПа и 0 \u00B0C;)" 
+
+                TitleBox:
+                    text1:"[b]Скоростные параметры по точкам[/b]"     
+
+                
 #-------------------------------------------------------------------------------------------------            
-        MDTopAppBar:
-            id: appbar_custom
-            type: "small"  
-            padding:[dp(15),dp(15),dp(15),dp(35)]
-            #spacing:dp(25)
-                
-            MDTopAppBarLeadingButtonContainer:
+        
+        MDBoxLayout:
+            id: top1
+            theme_bg_color:"Custom"
+            md_bg_color: 0.2, .3, .3, 1
+            adaptive_height: False
+            size_hint_y: None
+            height: label_top.texture_size[1] + 40
+            orientation: "horizontal"
+            spacing: "10dp"
+            padding:[dp(15),dp(15),dp(15),dp(15)]
 
-                MDActionTopAppBarButton:
-                    icon: "menu"
-                    theme_icon_color: "Custom"
-                    icon_color: "green"
-                    on_release: app.open_left_menu(self, 1)
+            #Widget:
 
-            MDTopAppBarTitle:
-                id: proba_name_bar
-                pos_hint: {"center_x": .5, "center_y": .5}
-                text: " "
-                theme_text_color: "Custom"
-                text_color: "green"
-
+            MDIconButton:
+                icon: "menu"
+                style: "tonal"
+                theme_bg_color: "Custom"
+                md_bg_color: 0.2, .3, .3, 1
+                #md_bg_color: 0.2, .7, .3, 1
+                theme_icon_color: "Custom"
+                icon_color: "white"
+                pos_hint: {"center_y": .5}
+                on_release: app.open_left_menu(self, 1)
             
-                
-<Spacer@Widget>
-    size_hint_y: None
-    height: "12dp"
-<Spacer10@Widget>
-    size_hint_y: None
-    height: "120dp"
-
-
-    
+            MDBoxLayout:
+                MDLabel:
+                    text: root.record_name
+                    text_color: "white"
+                    valign: "center"
+                    halign: "center"
+            
                 

@@ -39,9 +39,11 @@ class ResultScreen(MDScreen):
         if not self.check_box_choise == checkbox:
             self.check_box_choise = checkbox
             print(self.check_box_choise)
+            self.ids.calc_but.disabled = False
                 
     
     def choise_result(self):
+        self.ids.calc_but.disabled = False 
         if self.check_box_choise == 0:
             if len(self.measures) > 0:
                 print(self.measures)
@@ -56,7 +58,21 @@ class ResultScreen(MDScreen):
                 App.get_running_app().go_to_gost()
             else:
                 self.ids.calc_but.disabled = True 
-            
         else:
-            App.get_running_app().go_to_tube()
+            if len(self.measures) > 0:
+                print(self.measures)
+                for meas in self.measures:
+                    if meas[2] < 0 or meas[3] < 0:
+                        self.ids.calc_but.disabled = True 
+                        MDDialog(
+                            MDDialogHeadlineText(text="Ошибка",),
+                            MDDialogSupportingText(text="В серии есть измерения с отрицательными значениями. Исправьте измерения и вернитесь к расчету.",),
+                        ).open()
+                        return
+                App.get_running_app().go_to_tube()
+            else:
+                self.ids.calc_but.disabled = True 
+            
+        
+        
 

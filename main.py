@@ -528,6 +528,18 @@ class RecordScreen(MDScreen):
         list_item.add_widget(TertiaryText)
         list_item.add_widget(container)
         list_item.add_widget(icon_btn1)
+
+        headline_height = headlineText.height
+        supporting_height = supportingText.height
+        tertiary_height = TertiaryText.height
+        # headline_height = headlineText.height
+        # supporting_height = supportingText.texture_size[1]
+        # tertiary_height = TertiaryText.texture_size[1]
+        print(headline_height, supporting_height, tertiary_height)
+
+        total_height = headline_height + supporting_height + tertiary_height
+        if platform == 'android':
+            list_item.height = total_height
         grid_layout.add_widget(list_item)
         
 
@@ -709,5 +721,87 @@ class Live(App, MDApp):
                 self.go_to_meas()
         return True
 
+    def share_data(self):
+        text = "share data"
+        print(text)
+        if platform == 'android':
+            # -------------------------------send text----------------------------
+            # from jnius import autoclass
+            # PythonActivity = autoclass('org.kivy.android.PythonActivity')
+            # Intent = autoclass('android.content.Intent')
+            # String = autoclass('java.lang.String')
+            # intent = Intent()
+            # intent.setAction(Intent.ACTION_SEND)
+            
+            # intent.putExtra(Intent.EXTRA_TEXT, String(text))
+            # intent.setType("text/plain")
+
+            # current_activity = PythonActivity.mActivity
+            # chooser = Intent.createChooser(intent, String("Share via"))
+            # current_activity.startActivity(chooser)
+
+            #-------------------------------send file----------------------------
+
+            import os
+            from android.storage import primary_external_storage_path
+
+            # Define the file content
+            file_content = "Test text 123"
+
+            # Define the file name
+            file_name = "test_file.txt"
+
+            # Get the path to the Downloads directory
+            downloads_dir = os.path.join(primary_external_storage_path(), "Download")
+
+            # Create the file path
+            file_path = os.path.join(downloads_dir, file_name)
+
+            # Write the file to the Downloads directory
+            with open(file_path, "w") as file:
+                file.write(file_content)
+
+            print(f"File saved to: {file_path}")
+            # file_content = "Test text 123"
+            # file_path = "test_file.txt"
+            # with open(file_path, "w") as file:
+            #     file.write(file_content)
+
+            # with open(file_path, "r") as file:
+            #     file_contents = file.read()
+            #     print(file_contents) 
+
+            # from android.storage import primary_external_storage_path
+            # from jnius import autoclass
+            # from jnius import cast
+            # import os
+            
+            # StrictMode = autoclass('android.os.StrictMode')
+            # StrictMode.disableDeathOnFileUriExposure()
+            
+            # PythonActivity = autoclass('org.kivy.android.PythonActivity')
+            
+            # Intent = autoclass('android.content.Intent')
+            # String = autoclass('java.lang.String')
+            # Uri = autoclass('android.net.Uri')
+            # File = autoclass('java.io.File')
+
+            # shareIntent = Intent(Intent.ACTION_SEND)
+            # shareIntent.setType('"text/plain"')
+
+            # path = os.path.join(primary_external_storage_path(),file_path)
+
+            # imageFile = File(path)
+            # print(imageFile)
+            # uri = Uri.fromFile(imageFile)
+            # parcelable = cast('android.os.Parcelable', uri)
+            # shareIntent.putExtra(Intent.EXTRA_STREAM, parcelable)
+            # # uri = Uri.fromFile(imageFile)
+            # #     shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+
+            # currentActivity = cast('android.app.Activity', PythonActivity.mActivity)
+            # currentActivity.startActivity(shareIntent)
+
+            
 
 Live().run()

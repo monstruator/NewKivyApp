@@ -67,7 +67,7 @@ class GostScreen(MDScreen):
             Pgsnu = self.current_record[21]
         elif self.current_record[23] == 2:
             Pgsnu = self.current_record[25]
-        self.ids.box5.text2 = f"{self.current_record[25]:.2f}" + " г/м³"
+        self.ids.box5.text2 = f"{Pgsnu:.2f}" + " г/м³"
 
         F = 0
         if self.current_record[24] == 0:
@@ -125,7 +125,7 @@ class GostScreen(MDScreen):
                     self.ids.custom_widget_box.remove_widget(widget)
             self.add_table_title()
             for el in range(len(measures)):
-                if not self.current_record[18] ==0 and not meas[3] == 0:
+                if not self.current_record[18] ==0 and not meas[3] == 0 and meas[8] == 1:
                     self.add_card(el, measures[el])
     
 

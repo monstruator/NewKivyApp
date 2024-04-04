@@ -8,32 +8,14 @@
             type: "small" 
             theme_bg_color:"Custom"
             md_bg_color: 0.2, .3, .3, 
-            elevation: 20
-            
-            MDTopAppBarLeadingButtonContainer:    
-                #MDActionTopAppBarButton:
-                #    icon: "menu"
-                #    theme_icon_color: "Custom"
-                #    icon_color: "white"
-                #    
-                #    on_release: app.open_left_menu(self)
-                    #MDBadge:
-                    #    text: "12"
+            elevation: 20  
 
             MDTopAppBarTitle:
                 text: "Активные объекты"
                 text_color: "white"
                 pos_hint: {"center_x": .5}
                 font_style: "Headline"
-                role: "medium"
-
-            #MDTopAppBarTrailingButtonContainer:    
-            #    MDActionTopAppBarButton:
-            #        icon: "arrow-left"
-            #        theme_icon_color: "Custom"
-            #        icon_color: "white"
-            #        on_release: app.go_to_login()
-                    
+                role: "small"
         
         ScrollView:
             MDGridLayout:
@@ -49,8 +31,6 @@
             id: appbar_custom
             type: "small"  
 
-
-
             MDTopAppBarTitle:
                 pos_hint: {"center_x": .5, "center_y": .5}
                 text: " "
@@ -61,13 +41,6 @@
                 padding:[dp(15),dp(15),dp(20),dp(35)]
                 spacing: "34dp"
                 pos_hint: {"center_y": .5}
-                MDFabButton:
-                    icon: "bluetooth"
-                    style: "standard" 
-                    color_map: "tertiary" 
-                    theme_bg_color: "Custom"
-                    md_bg_color: "blue"   
-                    on_release: app.go_to_newrecods()
 
                 MDFabButton:
                     icon: "plus"
@@ -76,6 +49,14 @@
                     theme_bg_color: "Custom"
                     md_bg_color: "blue"   
                     on_release: app.go_to_newrecods()
+                
+                #MDFabButton:
+                #    icon: "share-variant"
+                #    style: "standard" 
+                #    color_map: "tertiary" 
+                #    theme_bg_color: "Custom"
+                #    md_bg_color: "blue"   
+                #    on_release: app.share_data()
                 
                 MDFabButton:
                     icon: "file-plus-outline"

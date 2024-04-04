@@ -1,61 +1,53 @@
 <MeasRecordScreen>
     name: "obj_record"
     md_bg_color: self.theme_cls.primaryContainerColor
-    text_date: ""
-    text_time1: ""
-    text_time2: ""
-    text_name: ""
-    text_description: ""
-    text_temp: ""
-    text_presure: ""
-    text_hum: ""
     record_name: "None"
 
     MDBoxLayout:
         orientation: "vertical"
-        MDTopAppBar:
-            type: "small" 
+
+        MDBoxLayout:
+            id: top1
             theme_bg_color:"Custom"
             md_bg_color: 0.2, .3, .3, 1
-
-            MDTopAppBarTitle:
+            adaptive_height: False
+            size_hint_y: None
+            height: label_top.texture_size[1] + 40
+            orientation: "horizontal"
+            spacing: "10dp"
+            padding:[dp(15),dp(15),dp(15),dp(15)]
+            
+            MDLabel:
+                id: label_top
+                font_style: "Title"
+                role: "small"    
                 text: "Измерения"
                 text_color: "white"
-                pos_hint: {"center_x": .5}
-                font_style: "Headline"
-                role: "small"
-
-            MDTopAppBarTrailingButtonContainer:    
-                MDActionTopAppBarButton:
-                    icon: "arrow-left"
-                    theme_icon_color: "Custom"
-                    icon_color: "white"
-                    on_release: app.go_to_obj()
+                valign: "center"
+                halign: "center"
+                
+            MDIconButton:
+                icon: "arrow-left"
+                style: "tonal"
+                theme_bg_color: "Custom"
+                md_bg_color: 0.2, .3, .3, 1
+                #md_bg_color: 0.2, .7, .3, 1
+                theme_icon_color: "Custom"
+                icon_color: "white"
+                pos_hint: {"center_y": .5}
+                on_release: app.go_to_obj()
                     
         ScrollView:
             MDGridLayout:
+                adaptive_height: True
                 id: custom_widget_box
                 size_hint_y: None
                 cols:1
-                #height: self.minimum_height
-                padding:[dp(15),dp(15),dp(15),dp(35)]
-                spacing:dp(25)
-                #height: "1800dp"
+                padding:[dp(15),dp(15),dp(15),dp(25)]
+                spacing:dp(35)
 
-                #MDCard:
-                #    theme_bg_color:"Custom"
-                #    md_bg_color: self.theme_cls.primaryContainerColor
-                #    md_bg_color_disabled: self.theme_cls.primaryContainerColor
-                #    ripple_behavior: False
-                #    Widget:
-                #        size_hint_x: .05
-                      
-                #MDBoxLayout:
-                #    size_hint_x: .8
-                #    orientation: "vertical"
-                #    spacing: "25dp"
-                #    padding: "12dp"
-                    
+                Spacer:
+
                 MDLabel:
                     font_style: "Title"
                     role: "medium"
@@ -63,9 +55,13 @@
 
                 MDBoxLayout:
                     orientation: "horizontal"
-                    spacing: "22dp"    
+                    spacing: "22dp"
+                    adaptive_height: False
+                    size_hint_y: None
+                    height: minus.texture_size[1] 
+
                     CustomButton:
-                        #icon: "minus"
+                        id: minus
                         icon: "arrow-left-thick"
                         on_release: root.prev_meas() 
                     CustomButton:
@@ -84,7 +80,10 @@
 
                 MDBoxLayout:
                     orientation: "horizontal"
-                    spacing: "22dp" 
+                    spacing: "22dp"
+                    adaptive_height: False
+                    size_hint_y: None
+                    height: minus.texture_size[1] 
 
                     MDLabel:
                         size_hint_x: .3

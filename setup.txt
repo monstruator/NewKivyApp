@@ -1,0 +1,62 @@
+git add *.py *.kv
+git commit -m "Delete double screen"
+git push -u origin main
+
+source venv/bin/activate
+DEBUG=1 python main.py
+
+
+pip install https://github.com/kivymd/KivyMD/archive/master.zip
+
+buildozer -v android clean 
+buildozer -v android debug
+
+android.permission.
+pip install git+https://github.com/kivy/python-for-android.git
+
+
+ ------------------------                                               
+adb install -r Manometr-0.3-arm64-v8a_armeabi-v7a-debug.apk
+adb logcat| grep -w "I python"
+
+//-----------------Set in VS Code
+ export JVM_PATH=/usr/lib/jvm/java-17-openjdk-amd64/lib/server/libjvm.so
+export LD_LIBRARY_PATH=/usr/lib/jvm/java-17-openjdk-amd64/lib/server
+#export JVM_PATH=/usr/lib/jvm/java-17-openjdk-amd64/lib/server/libjvm.so
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/
+//-----------------
+
+
+
+    
+    MDTopAppBar:
+            id: appbar_custom
+            type: "small"  
+            padding:[dp(15),dp(15),dp(15),dp(35)]
+            #spacing:dp(25)
+                
+            MDTopAppBarLeadingButtonContainer:
+
+                MDActionTopAppBarButton:
+                    icon: "menu"
+                    theme_icon_color: "Custom"
+                    icon_color: "green"
+                    on_release: app.open_left_menu(self, 1)
+
+            MDTopAppBarTitle:
+                id: proba_name_bar
+                pos_hint: {"center_x": .5, "center_y": .5}
+                theme_text_color: "Custom"
+                text_color: "green"
+
+            MDTopAppBarTrailingButtonContainer:
+                padding:[dp(15),dp(15),dp(50),dp(5)]
+                spacing: "34dp"
+                pos_hint: {"center_y": .5}
+                MDFabButton:
+                    icon: "bluetooth"
+                    style: "standard" 
+                    color_map: "tertiary" 
+                    theme_bg_color: "Custom"
+                    md_bg_color: "blue"   
+                    on_release: app.go_to_newrecods()            
